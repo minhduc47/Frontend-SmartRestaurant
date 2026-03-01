@@ -1,0 +1,107 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+// Shopping Cart Popover Styles
+.popover-carts {
+    .ant-popover-inner {
+        padding: 0;
+        border-radius: 10px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+        min-width: 260px;
+        max-width: 320px;
+        width: 320px;
+    }
+    .ant-popover-content {
+        padding: 0;
+    }
+    .pop-cart-body {
+        background: #fff;
+        padding: 8px 0 0 0;
+        max-width: 320px;
+        width: 320px;
+        .pop-cart-content {
+            padding: 8px 16px;
+            max-height: 220px;
+            overflow-y: auto;
+            width: 100%;
+        }
+        .pop-cart-content .book {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            &:last-child {
+                border-bottom: none;
+            }
+            img {
+                width: 36px;
+                height: 48px;
+                object-fit: cover;
+                border-radius: 4px;
+                border: 1px solid #eee;
+                flex-shrink: 0;
+                margin-right: 8px;
+            }
+            div {
+                flex: 1;
+                min-width: 0;
+                font-size: 14px;
+                color: #222;
+                line-height: 1.4;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .price {
+                color: #ff4d4f;
+                font-weight: 500;
+                font-size: 14px;
+                margin-left: 8px;
+                white-space: nowrap;
+            }
+        }
+        .pop-cart-footer {
+            padding: 12px;
+            background: #fff;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            button {
+                width: auto;
+                min-width: 110px;
+                background: #ff4d4f;
+                color: #fff;
+                border: none;
+                padding: 6px 18px;
+                border-radius: 6px;
+                font-size: 14px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: background 0.2s;
+                box-shadow: 0 2px 8px rgba(255,77,79,0.10);
+                margin-top: 8px;
+                &:hover {
+                    background: #ff6f60;
+                }
+            }
+        }
+    }
+}
+
+// Cart header section
+.cart-header {
+    .ant-badge {
+        .ant-badge-count {
+            background: #e74c3c;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    }
+}
+

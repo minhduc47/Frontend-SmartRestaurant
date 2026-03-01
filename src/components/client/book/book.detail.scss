@@ -1,0 +1,323 @@
+.book-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 40px 0;
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+}
+
+.book-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.book-not-found {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.book-gallery {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 20px;
+
+  .main-image {
+    text-align: center;
+    margin-bottom: 20px;
+
+    .main-book-image {
+      width: 100%;
+      max-width: 400px;
+      height: auto;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: scale(1.02);
+      }
+    }
+  }
+
+  .thumbnail-list {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    .thumbnail {
+      width: 60px;
+      height: 80px;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+
+      &.active {
+        border-color: #1890ff;
+        transform: scale(1.1);
+      }
+
+      &:hover {
+        transform: scale(1.05);
+        border-color: #40a9ff;
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+  }
+}
+
+.book-details {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  height: fit-content;
+
+  .book-meta {
+    margin-bottom: 15px;
+
+    .ant-typography {
+      font-size: 16px;
+      color: #8c8c8c;
+    }
+  }
+
+  .book-title {
+    color: #2c3e50;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 20px !important;
+    font-size: 2.2rem !important;
+  }
+
+  .book-rating {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+
+    .ant-rate {
+      font-size: 20px;
+    }
+
+    .rating-count {
+      color: #8c8c8c;
+      font-size: 14px;
+    }
+  }
+
+  .book-price {
+    margin-bottom: 30px;
+
+    .current-price {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #ff4757;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .book-actions {
+    .quantity-section {
+      margin-bottom: 25px;
+
+      .ant-typography {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 16px;
+        color: #2c3e50;
+
+        &:last-child {
+          color: #8c8c8c;
+          font-size: 14px;
+          margin-bottom: 0;
+        }
+      }
+
+      .quantity-controls {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+
+        .ant-input-number {
+          width: 120px;
+        }
+      }
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+
+      .add-to-cart-btn {
+        background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        border: none;
+        color: #2c3e50;
+        font-weight: 600;
+        height: 50px;
+        padding: 0 30px;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(252, 182, 159, 0.4);
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(252, 182, 159, 0.6);
+          background: linear-gradient(135deg, #fcb69f 0%, #ffecd2 100%);
+        }
+      }
+
+      .buy-now-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        height: 50px;
+        padding: 0 40px;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+          background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+      }
+    }
+
+    .secondary-actions {
+      display: flex;
+      gap: 20px;
+
+      .ant-btn {
+        color: #8c8c8c;
+        font-weight: 500;
+        border: none;
+        padding: 0;
+        height: auto;
+
+        &:hover {
+          color: #1890ff;
+          background: transparent;
+        }
+
+        .anticon {
+          margin-right: 8px;
+        }
+      }
+    }
+  }
+}
+
+.book-description-card {
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border: none;
+
+  .ant-card-head {
+    border-bottom: 2px solid #f0f0f0;
+    border-radius: 20px 20px 0 0;
+
+    .ant-card-head-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+  }
+
+  .ant-card-body {
+    padding: 30px;
+
+    .ant-typography {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #5a6c7d;
+
+      strong {
+        color: #2c3e50;
+      }
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .book-page {
+    padding: 20px 0;
+
+    .container {
+      padding: 0 15px;
+    }
+  }
+
+  .book-gallery,
+  .book-details {
+    padding: 20px;
+    border-radius: 15px;
+  }
+
+  .book-details {
+    margin-top: 20px;
+
+    .book-title {
+      font-size: 1.8rem !important;
+    }
+
+    .book-price .current-price {
+      font-size: 2rem;
+    }
+
+    .action-buttons {
+      flex-direction: column;
+
+      .ant-btn {
+        width: 100%;
+      }
+    }
+  }
+
+  .book-gallery {
+    .thumbnail-list {
+      .thumbnail {
+        width: 50px;
+        height: 65px;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .book-details {
+    .book-title {
+      font-size: 1.5rem !important;
+    }
+
+    .book-price .current-price {
+      font-size: 1.8rem;
+    }
+  }
+}
