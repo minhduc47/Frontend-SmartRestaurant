@@ -1,4 +1,4 @@
-import { deleteBookAPI, getBooksAPI } from "@/services/book.api";
+import { deleteBookAPI, getBooksAPI } from "@/services/dish.api";
 import { dateRangeValidate } from "@/services/helper";
 import { CloudUploadOutlined, DeleteTwoTone, EditTwoTone, ExportOutlined, PlusOutlined } from "@ant-design/icons";
 import { ActionType, ProColumns, ProTable } from "@ant-design/pro-components";

@@ -1,4 +1,4 @@
-import { getBooksAPI, getCategoryAPI } from "@/services/book.api";
+import { getCategoryAPI, getListDishAPI } from "@/services/dish.api";
 import { FilterTwoTone, ReloadOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Col, Divider, Form, InputNumber, Pagination, Rate, Row, Spin } from "antd";
 import { Tabs } from "antd";
@@ -7,10 +7,7 @@ import { useEffect, useState } from "react";
 import type { GetProp } from 'antd';
 import { useNavigate, useOutletContext } from "react-router";
 import MobileFilter from "@/components/client/book/mobile.filter";
-interface ICategory {
-    label: string;
-    value: string;
-}
+type ISelectOption = { label: string; value: string };
 interface FieldType {
     range?: {
         from?: number;
@@ -20,9 +17,9 @@ interface FieldType {
 }
 const HomePage = () => {
     const { searchTerm } = useOutletContext() as any;
-    const [categories, setCategories] = useState<ICategory[]>([]);
+    const [categories, setCategories] = useState<ISelectOption[]>([]);
 
-    const [books, setBooks] = useState<IBookTable[]>([]);
+    const [books, setBooks] = useState<IDish[]>([]);
 
     const items: TabsProps['items'] = [
         {
@@ -63,11 +60,11 @@ const HomePage = () => {
         const fetchCategories = async () => {
             const response = await getCategoryAPI();
             if (response && response.data) {
-                const categories = response.data.map((category) => ({
-                    label: category,
-                    value: category
+                const cats = response.data.map((c) => ({
+                    label: c.name,
+                    value: c.name,
                 }));
-                setCategories(categories);
+                setCategories(cats);
             }
         };
         fetchCategories();
@@ -87,12 +84,12 @@ const HomePage = () => {
             query += `${filter}`;
         }
         if (searchTerm) {
-            query += `&mainText=${searchTerm}`;
+            query += `&name=${searchTerm}`;
         }
-        const res = await getBooksAPI(query);
+        const res = await getListDishAPI(query);
         if (res.data) {
             setMeta({
-                current: res.data?.meta.current,
+                current: res.data?.meta.page,
                 pageSize: res.data?.meta.pageSize,
                 pages: res.data?.meta.pages,
                 total: res.data?.meta.total,
@@ -258,7 +255,7 @@ const HomePage = () => {
                             </Row>
                             <Row>
                                 {books.map((book) => (
-                                    <Col key={book._id} xs={24} sm={12} md={8} lg={6} xl={4.8}>
+                                    <Col key={book.id} xs={24} sm={12} md={8} lg={6} xl={4.8}>
                                         <div style={{
                                             border: "1px solid #e8e8e8",
                                             borderRadius: 8,
@@ -281,12 +278,12 @@ const HomePage = () => {
                                                 e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.05)";
                                             }}
                                             onClick={() => {
-                                                navigate(`/book/${book._id}`);
+                                                navigate(`/dish/${book.id}`);
                                             }}
                                         >
                                             <img
-                                                src={`${import.meta.env.VITE_API_URL}/images/book/${book.thumbnail}`}
-                                                alt={book.mainText}
+                                                src={book.image}
+                                                alt={book.name}
                                                 style={{
                                                     width: 120,
                                                     height: 160,
@@ -309,7 +306,7 @@ const HomePage = () => {
                                                 WebkitBoxOrient: "vertical",
                                                 color: "#333"
                                             }}>
-                                                {book.mainText}
+                                                {book.name}
                                             </div>
                                             <div style={{
                                                 fontWeight: 600,
@@ -328,7 +325,7 @@ const HomePage = () => {
                                                 />
                                             </div>
                                             <div style={{ fontSize: 12, color: "#888" }}>
-                                                Đã bán {book.sold}
+                                                {book.category?.name}
                                             </div>
                                         </div>
                                     </Col>

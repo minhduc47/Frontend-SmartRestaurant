@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Row, Col, Button, Rate, InputNumber, Typography, Divider, message, Card } from "antd";
 import { ShoppingCartOutlined, HeartOutlined, ShareAltOutlined } from "@ant-design/icons";
-import { getBookByIdAPI } from "services/book.api";
+import { getBookByIdAPI } from "@/services/dish.api";
 import "./book.detail.scss";
 import ImageGallery from "react-image-gallery";
 import ModalGallery from "./modal.gallery";

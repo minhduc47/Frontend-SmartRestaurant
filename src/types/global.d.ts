@@ -1,32 +1,30 @@
-export {};
+export { };
 
 declare global {
-interface IBackendRes<T> {
-    error?: string | string[];
-    message: string;
-    statusCode: number | string;
-    data?: T;
-}
+    interface IBackendRes<T> {
+        error?: string | string[];
+        message: string;
+        statusCode: number | string;
+        data?: T;
+    }
 
     interface IModelPaginate<T> {
         meta: {
-            current: number;
+            page: number;
             pageSize: number;
             pages: number;
             total: number;
-        },
-        result: T[]
+        };
+        result: T[];
     }
     interface ILogin {
         access_token: string;
         user: {
+            id: number;
             email: string;
-            phone: string;
-            fullName: string;
-            role: string;
-            avatar: string;
-            id: string;
-        }
+            name: string;
+            role: IRole;
+        };
     }
     interface IRegisterRequest {
         fullName: string;
@@ -35,21 +33,24 @@ interface IBackendRes<T> {
         phone: string;
     }
     interface IRegister {
-        _id:string;
+        _id: string;
         email: string;
         fullName: string;
     }
+    interface IRole {
+        id: number;
+        name: string;
+    }
+
     interface IUser {
+        id: number;
         email: string;
-        phone: string;
-        fullName: string;
-        role: string;
-        avatar: string;
-        id: string;
+        name: string;
+        role: IRole;
     }
 
     interface IFetchAccount {
-       user: IUser;
+        user: IUser;
     }
     interface IUserTable {
         _id: string;
@@ -75,99 +76,83 @@ interface IBackendRes<T> {
         detail: string;
     }
 
-    interface IBookTable {
-        _id: string;
-        thumbnail: string;
-        slider: string[];
-        mainText: string;
-        author: string;
-        price: number;
-        sold: number;
-        quantity: number;
-        category: string;
-        createdAt: Date;
-        updatedAt: Date;
-    }
+    // ── Smart Restaurant – Category ───────────────────────────────────────────
 
-    interface ICreateBookRequest {
-        thumbnail: string;
-        slider: string[];
-        mainText: string;
-        author: string;
-        price: number;
-        quantity: number;
-        category: string;
-    }
-
-    interface ICart {
-        _id: string;
-        quantity: number;
-        detail: IBookTable;
-    }
-
-    interface IOrderRequest {
+    interface ICategory {
+        id: number;
         name: string;
-        address: string;
-        phone: string;
-        totalPrice: number;
-        type: string;
-        detail: {
-            bookName: string;
-            quantity: number;
-            _id: string;
-        }[];
+        description: string;
+    }
+
+    // ── Smart Restaurant – Dish ───────────────────────────────────────────────
+
+    interface IDish {
+        id: number;
+        name: string;
+        price: number;
+        description: string;
+        image: string;
+        active: boolean;
+        category: ICategory;
+    }
+
+    interface ICreateDishRequest {
+        name: string;
+        price: number;
+        description: string;
+        image: string;
+        active?: boolean;
+        categoryId: number;
+    }
+
+    // ── Smart Restaurant – Order ───────────────────────────────────────────────
+
+    type OrderStatus = 'PENDING' | 'PREPARING' | 'SERVED' | 'PAID' | 'CANCELLED';
+    type OrderType = 'IN_STORE' | 'DELIVERY';
+
+    interface IOrderItem {
+        dishId: number;
+        dishName: string;
+        quantity: number;
+        unitPrice: number;
     }
 
     interface IOrder {
-        _id: string;
-        name: string;
-        address: string;
-        phone: string;
+        id: number;
         totalPrice: number;
-        type: string;
-        detail: {
-            bookName: string;
-            quantity: number;
-            _id: string;
-        }[];
-        createdAt: Date;
-        updatedAt: Date;
-    }
-    interface IOrderHistoryTable {
-        _id: string;
-        name: string;
-        type: string;
-        email: string;
-        phone: string;
-        userId: string;
-        detail: {
-            bookName: string;
-            quantity: number;
-            _id: string;
-        }[];
-        totalPrice: number;
-        paymentStatus: string;
-        paymentRef: string;
+        status: OrderStatus;
+        orderType: OrderType;
+        tableId: number | null;
+        items: IOrderItem[];
         createdAt: Date;
         updatedAt: Date;
     }
 
+    interface ICreateOrderItem {
+        dishId: number;
+        quantity: number;
+        note?: string;
+    }
+
+    interface ICreateOrderRequest {
+        orderType: OrderType;
+        tableId?: number;
+        items: ICreateOrderItem[];
+    }
+
     interface IOrderTable {
-        _id: string;
-        name: string;
-        address: string;
-        phone: string;
-        type: string;
-        paymentStatus: string;
-        paymentRef: string;
-        detail: {
-            bookName: string;
-            quantity: number;
-            _id: string;
-        }[];
+        id: number;
         totalPrice: number;
+        status: OrderStatus;
+        orderType: OrderType;
+        tableId: number | null;
         createdAt: Date;
         updatedAt: Date;
+    }
+
+    interface ICart {
+        dish: IDish;
+        quantity: number;
     }
 
     interface IDashboardData {

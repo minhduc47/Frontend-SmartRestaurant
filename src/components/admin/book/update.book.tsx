@@ -7,7 +7,7 @@ import { UploadFile } from 'antd/lib';
 import { UploadChangeParam } from 'antd/lib/upload';
 import { useEffect, useState } from 'react';
 import { UploadRequestOption as RcCustomRequestOptions } from 'rc-upload/lib/interface';
-import { getCategoryAPI, updateBookAPI, uploadFileAPI } from '@/services/book.api';
+import { getCategoryAPI, updateBookAPI, uploadFileAPI } from '@/services/dish.api';
 import { v4 as uuidv4 } from 'uuid';
 
 interface IProps {

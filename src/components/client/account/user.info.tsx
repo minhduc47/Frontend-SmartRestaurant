@@ -3,7 +3,7 @@ import { updateUserInfoAPI } from "@/services/api";
 import { App, Avatar, Button, Form, FormProps, Input, Upload, UploadFile } from "antd";
 import { useEffect, useState } from "react";
 import { UploadRequestOption as RcCustomRequestOptions } from 'rc-upload/lib/interface';
-import { uploadFileAPI } from "@/services/book.api";
+import { uploadFileAPI } from "@/services/dish.api";
 import { AntDesignOutlined, UploadOutlined } from "@ant-design/icons";
 interface FieldType {
     _id: string;
