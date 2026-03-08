@@ -26,16 +26,25 @@ declare global {
             role: IRole;
         };
     }
+    // BE User entity: name (KHÔNG phải fullName), email, password, age, gender, address (KHÔNG có phone)
     interface IRegisterRequest {
-        fullName: string;
+        name: string;
         email: string;
         password: string;
-        phone: string;
+        age?: number;
+        gender?: 'MALE' | 'FEMALE' | 'OTHER';
+        address?: string;
     }
+    // Khớp với BE ResCreateUserDTO: id, name, email, gender, address, age, createdAt, role
     interface IRegister {
-        _id: string;
+        id: number;
+        name: string;
         email: string;
-        fullName: string;
+        gender?: 'MALE' | 'FEMALE' | 'OTHER';
+        address?: string;
+        age?: number;
+        createdAt?: string;
+        role?: IRole;
     }
     interface IRole {
         id: number;
@@ -52,17 +61,20 @@ declare global {
     interface IFetchAccount {
         user: IUser;
     }
+    // BE User entity: id (long), name, email, age, gender, address, role { id, name }
     interface IUserTable {
-        _id: string;
-        fullName: string;
+        id: number;
+        name: string;
         email: string;
-        phone: string;
-        role: string;
-        avatar: string;
-        isActive: boolean;
-        type: string;
-        createdAt: Date;
-        updatedAt: Date;
+        age: number;
+        gender: 'MALE' | 'FEMALE' | 'OTHER';
+        address: string;
+        role: {
+            id: number;
+            name: string;
+        };
+        createdAt: string;
+        updatedAt: string;
     }
     interface IDataImport {
         fullName: string;
@@ -81,7 +93,7 @@ declare global {
     interface ICategory {
         id: number;
         name: string;
-        description: string;
+        description?: string;
     }
 
     // ── Smart Restaurant – Dish ───────────────────────────────────────────────
@@ -96,13 +108,15 @@ declare global {
         category: ICategory;
     }
 
+    // BE Dish entity: category là nested object { id }, KHÔNG phải flat categoryId
     interface ICreateDishRequest {
+        id?: number;        // cần thiết cho update
         name: string;
         price: number;
         description: string;
         image: string;
         active?: boolean;
-        categoryId: number;
+        category: { id: number }; // WAS: categoryId: number
     }
 
     // ── Smart Restaurant – Order ───────────────────────────────────────────────
@@ -117,15 +131,16 @@ declare global {
         unitPrice: number;
     }
 
+    // Khớp với BE ResOrderDTO: { id, totalPrice, status, orderType, note, createdAt, tableId }
+    // items & updatedAt KHÔNG có trong ResOrderDTO — phải fetch /orders/{id} riêng nếu cần detail
     interface IOrder {
         id: number;
         totalPrice: number;
         status: OrderStatus;
         orderType: OrderType;
         tableId: number | null;
-        items: IOrderItem[];
-        createdAt: Date;
-        updatedAt: Date;
+        note?: string;
+        createdAt: string; // BE trả về Instant → ISO string
     }
 
     interface ICreateOrderItem {
@@ -137,22 +152,35 @@ declare global {
     interface ICreateOrderRequest {
         orderType: OrderType;
         tableId?: number;
+        note?: string;
         items: ICreateOrderItem[];
     }
 
+    // Khớp với BE ResOrderDTO (dùng cho bảng danh sách đơn hàng admin)
     interface IOrderTable {
         id: number;
         totalPrice: number;
         status: OrderStatus;
         orderType: OrderType;
         tableId: number | null;
-        createdAt: Date;
-        updatedAt: Date;
+        note?: string;
+        createdAt: string;
     }
 
     interface ICart {
         dish: IDish;
         quantity: number;
+    }
+
+    // Khớp với BE ResUpdateUserDTO: { id, name, gender, address, age, updatedAt, role }
+    interface IResUpdateUser {
+        id: number;
+        name: string;
+        gender?: 'MALE' | 'FEMALE' | 'OTHER';
+        address?: string;
+        age?: number;
+        updatedAt: string;
+        role?: IRole;
     }
 
     interface IDashboardData {

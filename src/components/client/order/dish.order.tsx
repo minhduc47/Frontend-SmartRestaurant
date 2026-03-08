@@ -73,7 +73,7 @@ const DishOrderPage = () => {
                 getCategoryAPI(),
             ]);
             if (dishRes.data) setDishes(dishRes.data.result.filter((d) => d.active));
-            if (catRes.data) setCategories(catRes.data);
+            if (catRes.data) setCategories(catRes.data.result); // getCategoryAPI trả về IModelPaginate
             setLoadingDishes(false);
         };
         fetchAll();

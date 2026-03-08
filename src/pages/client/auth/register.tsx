@@ -5,10 +5,9 @@ import { Card } from 'antd';
 import { useState } from 'react';
 import { useNavigate } from "react-router";
 type FieldType = {
-    fullName?: string;
+    name?: string;
     email?: string;
     password?: string;
-    phone?: string;
 };
 
 const RegisterPage = () => {
@@ -18,10 +17,9 @@ const RegisterPage = () => {
     const onFinish: FormProps['onFinish'] = async (values: FieldType) => {
         setIsSubmit(true);
         const res = await registerAPI({
-            fullName: values.fullName!,
+            name: values.name!,
             email: values.email!,
             password: values.password!,
-            phone: values.phone!
         });
 
         if (res.data) {
@@ -58,7 +56,7 @@ const RegisterPage = () => {
                 >
                     <Form.Item
                         label="Full Name"
-                        name="fullName"
+                        name="name"
                         rules={[{ required: true, message: 'Please input your full name!' }]}
                     >
                         <Input />
@@ -78,14 +76,6 @@ const RegisterPage = () => {
                         rules={[{ required: true, message: 'Please input your password!' }]}
                     >
                         <Input.Password />
-                    </Form.Item>
-
-                    <Form.Item
-                        label="Phone Number"
-                        name="phone"
-                        rules={[{ required: true, message: 'Please input your phone number!' }]}
-                    >
-                        <Input />
                     </Form.Item>
 
                     <Form.Item>

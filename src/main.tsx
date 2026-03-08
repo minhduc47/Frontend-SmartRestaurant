@@ -5,7 +5,7 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import BookPage from 'pages/client/book';
+import DishPage from './pages/client/dish';
 import AboutPage from 'pages/client/about';
 import LoginPage from 'pages/client/auth/login';
 import RegisterPage from 'pages/client/auth/register';
@@ -15,7 +15,7 @@ import { App, ConfigProvider } from 'antd';
 import { AppProvider } from 'components/context/app.context';
 import ProtectedRoute from '@/components/auth';
 import DashBoardPage from 'pages/admin/dashboard';
-import ManageBookPage from 'pages/admin/manage.book';
+import ManageDishPage from 'pages/admin/manage.dish';
 import ManageOrderPage from 'pages/admin/manage.order';
 import ManageUserPage from 'pages/admin/manage.user';
 import LayoutAdmin from 'components/layout/layout.admin';
@@ -33,8 +33,8 @@ const router = createBrowserRouter([
         element: <HomePage />
       },
       {
-        path: "/book/:id",
-        element: <BookPage />,
+        path: "/dish/:id",
+        element: <DishPage />,
       },
       {
         path: "/about",
@@ -71,10 +71,10 @@ const router = createBrowserRouter([
         )
       },
       {
-        path: "book",
+        path: "dish",
         element: (
           <ProtectedRoute>
-            <ManageBookPage />
+            <ManageDishPage />
           </ProtectedRoute>
         )
       },

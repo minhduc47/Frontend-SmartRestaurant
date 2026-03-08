@@ -44,8 +44,8 @@ const LayoutAdmin = () => {
             ]
         },
         {
-            label: <Link to='/admin/book'>Manage Books</Link>,
-            key: '/admin/book',
+            label: <Link to='/admin/dish'>Manage Dishes</Link>,
+            key: '/admin/dish',
             icon: <ExceptionOutlined />
         },
         {
@@ -97,8 +97,6 @@ const LayoutAdmin = () => {
     }
 
 
-
-    const urlAvatar = `${import.meta.env.VITE_API_URL}/images/avatar/${user?.avatar}`;
     if (isAuthenticated === false) {
         return (
             <Outlet />
@@ -106,8 +104,8 @@ const LayoutAdmin = () => {
     }
     const isAdminRoute = location.pathname.includes('admin');
     if (isAuthenticated == true && isAdminRoute == true) {
-        const role = user?.role;
-        if (role === 'USER') {
+        const roleName = user?.role?.name;
+        if (roleName === 'USER') {
             return (
                 <Outlet />
             )
@@ -153,8 +151,8 @@ const LayoutAdmin = () => {
                         </span>
                         <Dropdown menu={{ items: itemsDropdown }} trigger={['click']}>
                             <Space style={{ cursor: "pointer" }}>
-                                <Avatar src={urlAvatar} />
-                                {user?.fullName}
+                                <Avatar>{user?.name?.charAt(0)?.toUpperCase() ?? 'U'}</Avatar>
+                                {user?.name}
                             </Space>
                         </Dropdown>
                     </div>

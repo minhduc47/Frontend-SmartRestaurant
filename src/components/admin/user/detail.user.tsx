@@ -4,7 +4,6 @@ import type { DescriptionsProps } from 'antd';
 import dayjs from 'dayjs';
 import { Drawer } from "antd";
 import { Descriptions } from "antd";
-import { Avatar } from 'antd';
 interface IProps {
     isOpenDetail: boolean;
     setIsOpenDetail: (isOpen: boolean) => void;
@@ -13,18 +12,17 @@ interface IProps {
 }
 const DetailUser = (props: IProps) => {
     const { isOpenDetail, setIsOpenDetail, userDetail, setUserDetail } = props;
-    const avatarUrl = userDetail ? `${import.meta.env.VITE_API_URL}/images/avatar/${userDetail.avatar}` : '';
     const items: DescriptionsProps['items'] = [
         {
             key: '1',
             label: 'ID',
-            children: userDetail ? userDetail._id : 'N/A',
+            children: userDetail ? userDetail.id : 'N/A',
             span: 2,
         },
         {
             key: '2',
-            label: 'Full Name',
-            children: userDetail ? userDetail.fullName : 'N/A',
+            label: 'Name',
+            children: userDetail ? userDetail.name : 'N/A',
             span: 2,
         },
         {
@@ -34,31 +32,25 @@ const DetailUser = (props: IProps) => {
             span: 2,
         },
         {
-            key: '4',
-            label: 'Phone',
-            children: userDetail ? userDetail.phone : 'N/A',
-            span: 2,
-        },
-        {
             key: '5',
             label: 'Role',
-            children: <Badge status="processing" text={userDetail ? userDetail.role : 'N/A'} />,
+            children: <Badge status="processing" text={userDetail ? userDetail.role?.name : 'N/A'} />,
             span: 2,
-        },
-        {
-            key: '5',
-            label: 'Avatar',
-            children: <Avatar size={40} src={avatarUrl}></Avatar>,
-            span: 2
         },
         {
             key: '6',
+            label: 'Address',
+            children: userDetail ? userDetail.address : 'N/A',
+            span: 2
+        },
+        {
+            key: '7',
             label: 'Created At',
             children: userDetail ? dayjs(userDetail.createdAt).format(FORMATE_DATE_VN) : 'N/A',
             span: 2,
         },
         {
-            key: '7',
+            key: '8',
             label: 'Updated At',
             children: userDetail ? dayjs(userDetail.updatedAt).format(FORMATE_DATE_VN) : 'N/A',
             span: 2,

@@ -1,45 +1,55 @@
-import { getDashboardDataAPI } from "@/services/api";
-import { Card, Col, Row, Statistic } from "antd";
-import { useEffect, useState } from "react";
-import CountUp from "react-countup";
-
+import { getListOrdersAPI, getUsersAPI } from '@/services/api';
+import { getListDishAPI } from '@/services/dish.api';
+import { Card, Col, Row, Statistic } from 'antd';
+import { useEffect, useState } from 'react';
+import CountUp from 'react-countup';
 
 const Dashboard = () => {
-    const [dataDashboard, setDataDashboard] = useState<IDashboardData>({
-        countBook: 0,
+    const [dataDashboard, setDataDashboard] = useState({
+        countDish: 0,
         countUser: 0,
         countOrder: 0,
     });
 
     useEffect(() => {
         const initDashboardData = async () => {
-            const res = await getDashboardDataAPI()
-            if (res.data) setDataDashboard(res.data);
-        }
+            const [userRes, orderRes, dishRes] = await Promise.all([
+                getUsersAPI('page=1&pageSize=1'),
+                getListOrdersAPI('page=1&pageSize=1'),
+                getListDishAPI('page=1&pageSize=1'),
+            ]);
+
+            setDataDashboard({
+                countUser: Number(userRes.data?.meta.total ?? 0),
+                countOrder: Number(orderRes.data?.meta.total ?? 0),
+                countDish: Number(dishRes.data?.meta.total ?? 0),
+            });
+        };
+
         initDashboardData();
-    }, [])
-    const fomatter = (value: any) => <CountUp end={value} separator="," />
+    }, []);
+
+    const formatter = (value: number | string) => <CountUp end={Number(value)} separator="," />;
+
     return (
-        <>
-            <Row gutter={[40, 40]} >
-                <Col span={8}>
-                    <Card>
-                        <Statistic title="Total Users" value={dataDashboard.countUser} formatter={fomatter} />
-                    </Card>
-                </Col>
-                <Col span={8}>
-                    <Card>
-                        <Statistic title="Total Orders" value={dataDashboard.countOrder} formatter={fomatter} />
-                    </Card>
-                </Col>
-                <Col span={8}>
-                    <Card>
-                        <Statistic title="Total Books" value={dataDashboard.countBook} formatter={fomatter} />
-                    </Card>
-                </Col>
-            </Row>
-        </>
+        <Row gutter={[40, 40]}>
+            <Col span={8}>
+                <Card>
+                    <Statistic title="Total Users" value={dataDashboard.countUser} formatter={formatter} />
+                </Card>
+            </Col>
+            <Col span={8}>
+                <Card>
+                    <Statistic title="Total Orders" value={dataDashboard.countOrder} formatter={formatter} />
+                </Card>
+            </Col>
+            <Col span={8}>
+                <Card>
+                    <Statistic title="Total Dishes" value={dataDashboard.countDish} formatter={formatter} />
+                </Card>
+            </Col>
+        </Row>
     );
-}
+};
 
 export default Dashboard;

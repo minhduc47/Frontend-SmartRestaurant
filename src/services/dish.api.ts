@@ -21,9 +21,9 @@ export const createDishAPI = (data: ICreateDishRequest) => {
     return axios.post<IBackendRes<IDish>>(urlBackend, data);
 };
 
-/** Cập nhật món ăn theo id. */
+/** Cập nhật món ăn. Body phải chứa trường `id` để BE tìm món cần sửa. */
 export const updateDishAPI = (data: ICreateDishRequest) => {
-    const urlBackend = `/dishes/`;
+    const urlBackend = `/dishes`; // BE: PUT /api/v1/dishes (không trailing slash)
     return axios.put<IBackendRes<IDish>>(urlBackend, data);
 };
 
@@ -35,28 +35,26 @@ export const deleteDishAPI = (id: string) => {
 
 // ── Category ──────────────────────────────────────────────────────────────────
 
-/** Lấy danh sách danh mục món ăn. */
+/** Lấy danh sách danh mục món ăn (có phân trang).
+ *  Gọi không có query → mặc định pageSize=10. Để lấy toàn bộ nên gọi với `pageSize=1000`.
+ */
 export const getCategoryAPI = () => {
-    const urlBackend = '/categories';
-    return axios.get<IBackendRes<ICategory[]>>(urlBackend);
+    const urlBackend = '/categories?page=1&size=1000';
+    return axios.get<IBackendRes<IModelPaginate<ICategory>>>(urlBackend);
 };
 
 // ── File upload ───────────────────────────────────────────────────────────────
 
 export const uploadFileAPI = (fileImg: File, folder: string) => {
-    const urlBackend = '/files';
+    // BE: POST /api/v1/files?folder={folder} (đọc folder từ @RequestParam, KHÔNG phải header)
+    const urlBackend = `/files?folder=${folder}`;
     const formData = new FormData();
     formData.append('file', fileImg);
-    return axios.post<IBackendRes<{ fileUploaded: string }>>(urlBackend, formData, {
+    // BE trả về: { fileName: string, uploadedAt: string }
+    return axios.post<IBackendRes<{ fileName: string; uploadedAt: string }>>(urlBackend, formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
-            'upload-type': folder,
         },
     });
 };
 
-// ── Aliases (BookStore → Restaurant migration) ────────────────────────────────
-export const getBooksAPI = getListDishAPI;
-export const getBookByIdAPI = getDishByIdAPI;
-export const updateBookAPI = updateDishAPI;
-export const deleteBookAPI = deleteDishAPI;

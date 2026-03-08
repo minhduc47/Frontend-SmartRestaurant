@@ -1,8 +1,7 @@
 
-import React from 'react';
 import { InboxOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
-import { App, message, Table, Upload } from 'antd';
+import { App, Table, Upload } from 'antd';
 import { Modal } from 'antd';
 import { useState } from 'react';
 import Exceljs from 'exceljs';
@@ -75,7 +74,7 @@ const ImportUser = (props: IProps) => {
         onDrop(e) {
             console.log('Dropped files', e.dataTransfer.files);
         },
-        customRequest({ file, onSuccess }) {
+        customRequest({ file: _file, onSuccess }) {
             // Simulate a file upload
             setTimeout(() => {
                 if (onSuccess) onSuccess("ok");

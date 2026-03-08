@@ -50,8 +50,9 @@ const CreateDish = ({ isOpenCreate, setIsOpenCreate, refreshTable }: IProps) => 
         const fetchCategories = async () => {
             const res = await getCategoryAPI();
             if (res?.data) {
+
                 setListCategories(
-                    res.data.map((c) => ({ label: c.name, value: c.id }))
+                    res.data.result.map((c) => ({ label: c.name, value: c.id }))
                 );
             }
         };
@@ -96,9 +97,9 @@ const CreateDish = ({ isOpenCreate, setIsOpenCreate, refreshTable }: IProps) => 
         if (res?.data) {
             const uploadedFile: UploadFile = {
                 uid: file.uid,
-                name: res.data.fileUploaded,
+                name: res.data.fileName,
                 status: 'done',
-                url: `${import.meta.env.VITE_BACKEND_URL}/images/dish/${res.data.fileUploaded}`,
+                url: `${import.meta.env.VITE_API_URL}/storage/dish/${res.data.fileName}`,
             };
             setFileList([uploadedFile]);
             setLoadingImage(false);
@@ -113,7 +114,7 @@ const CreateDish = ({ isOpenCreate, setIsOpenCreate, refreshTable }: IProps) => 
         const requestData: ICreateDishRequest = {
             name: values.name,
             price: values.price,
-            categoryId: values.categoryId,
+            category: { id: values.categoryId },
             description: values.description,
             image: fileList[0]?.name ?? '',
             active: values.active ?? true,

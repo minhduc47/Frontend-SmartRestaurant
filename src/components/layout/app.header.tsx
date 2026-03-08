@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { FaReact } from 'react-icons/fa'
+import { FaReact } from 'react-icons/fa';
 import { FiShoppingCart } from 'react-icons/fi';
 import { VscSearchFuzzy } from 'react-icons/vsc';
-import { Divider, Badge, Drawer, Avatar, Popover, Empty } from 'antd';
-import { Dropdown, Space } from 'antd';
+import { Divider, Badge, Drawer, Avatar, Popover, Empty, Dropdown, Space } from 'antd';
 import { useNavigate } from 'react-router';
 import './app.header.scss';
 import { Link } from 'react-router-dom';
@@ -15,107 +14,107 @@ interface IProps {
     searchTerm: string;
     setSearchTerm: (term: string) => void;
 }
+
 const AppHeader = (props: IProps) => {
-    // const { searchTerm, setSearchTerm } = props;
     const [openDrawer, setOpenDrawer] = useState(false);
-
-    const { isAuthenticated, user, setUser, setIsAuthenticated, carts, setCarts } = useCurrentApp();
-
-    const navigate = useNavigate();
     const [openUpdateUser, setOpenUpdateUser] = useState(false);
+    const { isAuthenticated, user, setUser, setIsAuthenticated, carts, setCarts } = useCurrentApp();
+    const navigate = useNavigate();
+
     const handleLogout = async () => {
-        //todo
         const res = await logoutAPI();
-        if (res.data) {
+        if (res.statusCode === 200) {
             setUser(null);
             setCarts([]);
             setIsAuthenticated(false);
             localStorage.removeItem('access_token');
             localStorage.removeItem('carts');
         }
-    }
+    };
 
-    let items = [
+    const items = [
         {
-            label: <label
-                style={{ cursor: 'pointer' }}
-                onClick={() => {
-                    setOpenUpdateUser(true);
-                }}
-            >Quản lý tài khoản</label>,
+            label: (
+                <label
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => {
+                        setOpenUpdateUser(true);
+                    }}
+                >
+                    Quan ly tai khoan
+                </label>
+            ),
             key: 'account',
         },
         {
-            label: <Link to="/history">Lịch sử mua hàng</Link>,
+            label: <Link to="/history">Lich su don hang</Link>,
             key: 'history',
         },
         {
-            label: <label
-                style={{ cursor: 'pointer' }}
-                onClick={() => handleLogout()}
-            >Đăng xuất</label>,
+            label: (
+                <label style={{ cursor: 'pointer' }} onClick={() => handleLogout()}>
+                    Dang xuat
+                </label>
+            ),
             key: 'logout',
         },
-
     ];
-    if (user?.role === 'ADMIN') {
+
+    if (user?.role?.name === 'ADMIN') {
         items.unshift({
-            label: <Link to='/admin'>Trang quản trị</Link>,
+            label: <Link to="/admin">Trang quan tri</Link>,
             key: 'admin',
-        })
+        });
     }
 
-    const urlAvatar = `${import.meta.env.VITE_API_URL}/images/avatar/${user?.avatar}`;
     const contentPopover = () => {
         return (
-            <div className='pop-cart-body'>
-                <div className='pop-cart-content'>
-                    {carts?.map((book, index) => {
-                        return (
-                            <div className='book' key={`book-${index}`}>
-                                <img src={`${import.meta.env.VITE_API_URL}/images/book/${book?.detail?.thumbnail}`} />
-                                <div>{book?.detail?.mainText}</div>
-                                <div className='price'>
-                                    {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(book?.detail?.price ?? 0)}
-                                </div>
+            <div className="pop-cart-body">
+                <div className="pop-cart-content">
+                    {carts?.map((item, index) => (
+                        <div className="dish" key={`cart-${index}`}>
+                            <img src={`${import.meta.env.VITE_API_URL}/storage/dish/${item.dish.image}`} />
+                            <div>{item.dish.name}</div>
+                            <div className="price">
+                                {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.dish.price)}
                             </div>
-                        )
-                    })}
+                        </div>
+                    ))}
                 </div>
-                {carts.length > 0 ?
-                    <div className='pop-cart-footer'>
-                        <button onClick={() => navigate('/order')}>Xem giỏ hàng</button>
+                {carts.length > 0 ? (
+                    <div className="pop-cart-footer">
+                        <button onClick={() => navigate('/order')}>Xem gio hang</button>
                     </div>
-                    :
-                    <Empty
-                        description="Không có sản phẩm trong giỏ hàng"
-                    />
-                }
+                ) : (
+                    <Empty description="Khong co san pham trong gio hang" />
+                )}
             </div>
-        )
-    }
+        );
+    };
+
     return (
         <>
-            <div className='header-container'>
+            <div className="header-container">
                 <header className="page-header">
                     <div className="page-header__top">
-                        <div className="page-header__toggle" onClick={() => {
-                            setOpenDrawer(true)
-                        }}>☰</div>
-                        <div className='page-header__logo'>
-                            <span className='logo'>
-                                <span onClick={() => navigate('/')}> <FaReact className='rotate icon-react' />Hỏi Dân !T</span>
-
-                                <VscSearchFuzzy className='icon-search' />
+                        <div className="page-header__toggle" onClick={() => setOpenDrawer(true)}>
+                            ☰
+                        </div>
+                        <div className="page-header__logo">
+                            <span className="logo">
+                                <span onClick={() => navigate('/')}>
+                                    <FaReact className="rotate icon-react" />Hoi Dan !T
+                                </span>
+                                <VscSearchFuzzy className="icon-search" />
                             </span>
                             <input
-                                className="input-search" type={'text'}
-                                placeholder="Bạn tìm gì hôm nay"
+                                className="input-search"
+                                type="text"
+                                placeholder="Ban tim gi hom nay"
                                 value={props.searchTerm}
                                 onChange={(e) => props.setSearchTerm(e.target.value)}
                             />
                         </div>
-
                     </div>
                     <nav className="page-header__bottom">
                         <ul id="navigation" className="navigation">
@@ -124,50 +123,48 @@ const AppHeader = (props: IProps) => {
                                     className="popover-carts"
                                     placement="topRight"
                                     rootClassName="popover-carts"
-                                    title={"Sản phẩm mới thêm"}
+                                    title={'Mon vua them'}
                                     content={contentPopover}
-                                    arrow={true}>
-                                    <Badge
-                                        count={carts?.length ?? 0}
-                                        size={"small"}
-                                        showZero
-                                    >
-                                        <FiShoppingCart className='icon-cart' />
+                                    arrow
+                                >
+                                    <Badge count={carts?.length ?? 0} size="small" showZero>
+                                        <FiShoppingCart className="icon-cart" />
                                     </Badge>
                                 </Popover>
                             </li>
-                            <li className="navigation__item mobile"><Divider type='vertical' /></li>
                             <li className="navigation__item mobile">
-                                {!isAuthenticated ?
-                                    <span onClick={() => navigate('/login')}> Tài Khoản</span>
-                                    :
+                                <Divider type="vertical" />
+                            </li>
+                            <li className="navigation__item mobile">
+                                {!isAuthenticated ? (
+                                    <span onClick={() => navigate('/login')}>Tai khoan</span>
+                                ) : (
                                     <Dropdown menu={{ items }} trigger={['click']}>
-                                        <Space >
-                                            <Avatar src={urlAvatar} />
-                                            {user?.fullName}
+                                        <Space>
+                                            <Avatar>{user?.name?.charAt(0)?.toUpperCase() ?? 'U'}</Avatar>
+                                            {user?.name}
                                         </Space>
                                     </Dropdown>
-                                }
+                                )}
                             </li>
                         </ul>
                     </nav>
                 </header>
             </div>
-            <Drawer
-                title="Menu chức năng"
-                placement="left"
-                onClose={() => setOpenDrawer(false)}
-                open={openDrawer}
-            >
-                <p>Quản lý tài khoản</p>
-                <Divider />
 
-                <p onClick={() => handleLogout()}>Đăng xuất</p>
+            <Drawer title="Menu" placement="left" onClose={() => setOpenDrawer(false)} open={openDrawer}>
+                <p style={{ cursor: 'pointer' }} onClick={() => setOpenUpdateUser(true)}>
+                    Quan ly tai khoan
+                </p>
                 <Divider />
+                <p style={{ cursor: 'pointer' }} onClick={() => handleLogout()}>
+                    Dang xuat
+                </p>
             </Drawer>
+
             <ManageAccount isModalOpen={openUpdateUser} setIsModalOpen={setOpenUpdateUser} />
         </>
-    )
+    );
 };
 
 export default AppHeader;

@@ -13,11 +13,11 @@ interface IProps {
 }
 
 type FieldType = {
-    _id?: string;
-    fullName?: string;
+    id?: number;         // BE: User.id (long) — KHÔNG phải _id string
+    name?: string;       // BE: User.name — KHÔNG phải fullName
     email?: string;
-    password?: string;
-    phone?: string;
+    age?: number;
+    address?: string;
 };
 
 const UpdateUser = (props: IProps) => {
@@ -28,18 +28,18 @@ const UpdateUser = (props: IProps) => {
     useEffect(() => {
         if (userEditing) {
             form.setFieldsValue({
-                _id: userEditing._id,
-                fullName: userEditing.fullName,
+                id: userEditing.id,
+                name: userEditing.name,
                 email: userEditing.email,
-                phone: userEditing.phone,
+                age: userEditing.age,
+                address: userEditing.address,
             });
-
         }
     }, [userEditing]);
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values: FieldType) => {
-        // Assuming updateUserAPI is a function that updates the user
-        const res = await updateUserAPI(values?._id!, values.fullName!, values.phone!);
+        // updateUserAPI(id: number, name: string)
+        const res = await updateUserAPI(values.id!, values.name!);
 
         if (res.data) {
             form.resetFields();
@@ -83,32 +83,38 @@ const UpdateUser = (props: IProps) => {
                 >
                     <Form.Item
                         hidden
-                        label="_id"
-                        name="_id"
-                        rules={[{ required: true, message: 'Please input your _id!' }]}
+                        label="id"
+                        name="id"
+                        rules={[{ required: true }]}
                     >
                         <Input disabled />
                     </Form.Item>
                     <Form.Item
                         label="Email"
                         name="email"
-                        rules={[{ required: true, message: 'Please input your email!' }, { type: 'email', message: 'The input is not valid E-mail!' }]}
+                        rules={[{ required: true, message: 'Vui lòng nhập email!' }, { type: 'email', message: 'Email không hợp lệ!' }]}
                     >
                         <Input disabled />
                     </Form.Item>
 
                     <Form.Item
-                        label="Full Name"
-                        name="fullName"
-                        rules={[{ required: true, message: 'Please input your full name!' }]}
+                        label="Tên đầy đủ"
+                        name="name"
+                        rules={[{ required: true, message: 'Vui lòng nhập tên!' }]}
                     >
                         <Input />
                     </Form.Item>
 
                     <Form.Item
-                        label="Phone Number"
-                        name="phone"
-                        rules={[{ required: true, message: 'Please input your phone number!' }]}
+                        label="Tuổi"
+                        name="age"
+                    >
+                        <Input type="number" />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="Địa chỉ"
+                        name="address"
                     >
                         <Input />
                     </Form.Item>

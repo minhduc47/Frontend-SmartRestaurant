@@ -24,8 +24,8 @@ const ProtectedRoute = (props: IProps) => {
     }
     const isAdminRoute = location.pathname.includes('admin');
     if (isAuthenticated == true && isAdminRoute == true) {
-        const role = user?.role;
-        if (role === 'USER') {
+        const roleName = user?.role?.name;
+        if (roleName === 'USER') {
             return (
                 <Result
                     status="403"

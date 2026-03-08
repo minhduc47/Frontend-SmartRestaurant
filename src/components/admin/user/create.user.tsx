@@ -11,10 +11,12 @@ interface IProps {
 }
 
 type FieldType = {
-    fullName?: string;
+    name?: string;
     email?: string;
     password?: string;
-    phone?: string;
+    age?: number;
+    gender?: 'MALE' | 'FEMALE' | 'OTHER';
+    address?: string;
 };
 
 const CreateUser = (props: IProps) => {
@@ -23,10 +25,12 @@ const CreateUser = (props: IProps) => {
     const { isOpenCreate, setIsOpenCreate, refreshTable } = props;
     const onFinish: FormProps['onFinish'] = async (values: FieldType) => {
         const res = await createUserAPI({
-            fullName: values.fullName!,
+            name: values.name!,
             email: values.email!,
             password: values.password!,
-            phone: values.phone!
+            age: values.age,
+            gender: values.gender,
+            address: values.address,
         });
 
         if (res.data) {
@@ -64,9 +68,9 @@ const CreateUser = (props: IProps) => {
                 autoComplete="off"
             >
                 <Form.Item
-                    label="Full Name"
-                    name="fullName"
-                    rules={[{ required: true, message: 'Please input your full name!' }]}
+                    label="Tên đầy đủ"
+                    name="name"
+                    rules={[{ required: true, message: 'Vui lòng nhập tên!' }]}
                 >
                     <Input />
                 </Form.Item>
@@ -74,23 +78,29 @@ const CreateUser = (props: IProps) => {
                 <Form.Item
                     label="Email"
                     name="email"
-                    rules={[{ required: true, message: 'Please input your email!' }, { type: 'email', message: 'The input is not valid E-mail!' }]}
+                    rules={[{ required: true, message: 'Vui lòng nhập email!' }, { type: 'email', message: 'Email không hợp lệ!' }]}
                 >
                     <Input />
                 </Form.Item>
 
                 <Form.Item
-                    label="Password"
+                    label="Mật khẩu"
                     name="password"
-                    rules={[{ required: true, message: 'Please input your password!' }]}
+                    rules={[{ required: true, message: 'Vui lòng nhập mật khẩu!' }]}
                 >
                     <Input.Password />
                 </Form.Item>
 
                 <Form.Item
-                    label="Phone Number"
-                    name="phone"
-                    rules={[{ required: true, message: 'Please input your phone number!' }]}
+                    label="Tuổi"
+                    name="age"
+                >
+                    <Input type="number" />
+                </Form.Item>
+
+                <Form.Item
+                    label="Địa chỉ"
+                    name="address"
                 >
                     <Input />
                 </Form.Item>

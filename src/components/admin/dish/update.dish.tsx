@@ -59,8 +59,9 @@ const UpdateDish = ({
         const fetchCategories = async () => {
             const res = await getCategoryAPI();
             if (res?.data) {
+                // BE trả về ResultPaginationDTO { result: ICategory[] }
                 setListCategories(
-                    res.data.map((c) => ({ label: c.name, value: c.id }))
+                    res.data.result.map((c) => ({ label: c.name, value: c.id }))
                 );
             }
         };
@@ -127,9 +128,9 @@ const UpdateDish = ({
         if (res?.data) {
             const uploadedFile: UploadFile = {
                 uid: file.uid,
-                name: res.data.fileUploaded,
+                name: res.data.fileName, // WAS: res.data.fileUploaded
                 status: 'done',
-                url: `${import.meta.env.VITE_BACKEND_URL}/images/dish/${res.data.fileUploaded}`,
+                url: `${import.meta.env.VITE_API_URL}/storage/dish/${res.data.fileName}`,
             };
             setFileList([uploadedFile]);
             setLoadingImage(false);
@@ -141,16 +142,18 @@ const UpdateDish = ({
     };
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
+        if (!dishEditing) return;
+
         const requestData: ICreateDishRequest = {
+            id: dishEditing.id,
             name: values.name,
             price: values.price,
-            categoryId: values.categoryId,
+            category: { id: values.categoryId },
             description: values.description,
-            image: fileList[0]?.name ?? fileList[0]?.url ?? '',
+            image: fileList[0]?.name ?? dishEditing.image,
             active: values.active,
         };
-
-        const res = await updateDishAPI(String(dishEditing!.id), requestData);
+        const res = await updateDishAPI(requestData);
         if (res?.data) {
             notification.success({ message: 'Cập nhật món ăn thành công!' });
             handleCancel();

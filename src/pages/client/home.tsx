@@ -6,7 +6,7 @@ import type { FormProps, TabsProps } from 'antd';
 import { useEffect, useState } from "react";
 import type { GetProp } from 'antd';
 import { useNavigate, useOutletContext } from "react-router";
-import MobileFilter from "@/components/client/book/mobile.filter";
+import MobileFilter from "@/components/client/dish/mobile.filter";
 type ISelectOption = { label: string; value: string };
 interface FieldType {
     range?: {
@@ -60,7 +60,7 @@ const HomePage = () => {
         const fetchCategories = async () => {
             const response = await getCategoryAPI();
             if (response && response.data) {
-                const cats = response.data.map((c) => ({
+                const cats = response.data.result.map((c) => ({
                     label: c.name,
                     value: c.name,
                 }));
@@ -352,7 +352,6 @@ const HomePage = () => {
             <MobileFilter
                 isOpen={isShowMobileFilter}
                 setIsOpen={setIsShowMobileFilter}
-                handleChangeFilter={handleOnClickCategory}
                 categories={categories}
                 onFinish={onFinish}
             />
