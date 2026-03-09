@@ -4,8 +4,8 @@ import { Button, Checkbox, Col, Divider, Form, InputNumber, Rate, Row } from 'an
 interface IProps {
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
-    categories: Array<{ label: string; value: string }>;
-    onFinish: (values: { range?: { from?: number; to?: number }; category?: string[] }) => void;
+    categories: Array<{ label: string; value: number }>;
+    onFinish: (values: { range?: { from?: number; to?: number }; category?: number[] }) => void;
 }
 
 const MobileFilter = (props: IProps) => {

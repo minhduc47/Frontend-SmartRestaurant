@@ -77,9 +77,11 @@ declare global {
         updatedAt: string;
     }
     interface IDataImport {
-        fullName: string;
+        id?: number;
+        fullName?: string;
+        name?: string;
         email: string;
-        phone: string;
+        phone?: string;
         password?: string;
     }
     interface IBulkUsersResponse {
@@ -170,6 +172,15 @@ declare global {
     interface ICart {
         dish: IDish;
         quantity: number;
+    }
+
+    interface IRestaurantTable {
+        id: number;
+        name: string;
+        qrToken?: string;
+        occupied: 'AVAILABLE' | 'OCCUPIED' | 'RESERVED';
+        createdAt?: string;
+        createdBy?: string;
     }
 
     // Khớp với BE ResUpdateUserDTO: { id, name, gender, address, age, updatedAt, role }

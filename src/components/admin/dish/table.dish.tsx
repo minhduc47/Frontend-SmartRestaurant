@@ -1,4 +1,5 @@
 import { deleteDishAPI, getListDishAPI } from '@/services/dish.api';
+import { resolveStorageUrl } from '@/services/helper';
 import { DeleteTwoTone, EditTwoTone, ExportOutlined, PlusOutlined } from '@ant-design/icons';
 import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
 import { App, Avatar, Badge, Button, Popconfirm, Tag } from 'antd';
@@ -65,7 +66,7 @@ const DishTable = () => {
                 <Avatar
                     size={48}
                     shape="square"
-                    src={entity.image}
+                    src={resolveStorageUrl(entity.image, 'dish')}
                     alt={entity.name}
                 />
             ),

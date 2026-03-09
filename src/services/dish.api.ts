@@ -1,11 +1,13 @@
 import axios from 'services/axios.customize';
+import { normalizePagingQuery } from './helper';
 
 // ── Dish ──────────────────────────────────────────────────────────────────────
 
 /** Lấy danh sách món ăn có phân trang / filter.
  *  query: chuỗi query string, ví dụ "page=1&pageSize=10&name=bún" */
 export const getListDishAPI = (query: string) => {
-    const urlBackend = `/dishes?${query}`;
+    const normalized = normalizePagingQuery(query);
+    const urlBackend = normalized ? `/dishes?${normalized}` : '/dishes';
     return axios.get<IBackendRes<IModelPaginate<IDish>>>(urlBackend);
 };
 

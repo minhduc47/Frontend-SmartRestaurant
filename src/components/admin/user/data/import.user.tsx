@@ -6,7 +6,7 @@ import { Modal } from 'antd';
 import { useState } from 'react';
 import Exceljs from 'exceljs';
 import { Buffer } from 'buffer';
-import { createListUsersAPI } from '@/services/api';
+import { createUserAPI } from '@/services/api';
 import templateFile from '@/assets/template/user.xlsx?url';
 interface IProps {
     isOpenModalImport: boolean;
@@ -84,23 +84,38 @@ const ImportUser = (props: IProps) => {
     };
     const handleImportData = async () => {
         setIsSubmit(true);
-        const dataImportWithPassword = dataImport.map((item) => {
-            return {
-                fullName: item.fullName,
-                email: item.email,
-                phone: item.phone,
-                password: import.meta.env.VITE_USER_CREATE_DEFAULT_PASSWORD
+        let countSuccess = 0;
+        let countError = 0;
+
+        for (const item of dataImport) {
+            const name = item.name ?? item.fullName ?? '';
+            const email = item.email;
+
+            if (!name || !email) {
+                countError += 1;
+                continue;
             }
-        })
-        const res = await createListUsersAPI(dataImportWithPassword);
-        if (res.data) {
-            notification.success({
-                message: 'Bulk Create Users',
-                description: (<>
-                    <div>success= {res.data.countSuccess}; error= {res.data.countError}</div>
-                </>),
+
+            const res = await createUserAPI({
+                name,
+                email,
+                password: import.meta.env.VITE_USER_CREATE_DEFAULT_PASSWORD,
             });
+
+            if (res.data) {
+                countSuccess += 1;
+            } else {
+                countError += 1;
+            }
         }
+
+        notification.info({
+            message: 'Import Users',
+            description: (<>
+                <div>success= {countSuccess}; error= {countError}</div>
+            </>),
+        });
+
         setIsSubmit(false);
         setIsOpenModalImport(false);
         setDataImport([]); // Clear data after successful import
@@ -148,7 +163,7 @@ const ImportUser = (props: IProps) => {
                     columns={[
                         {
                             title: 'Full Name',
-                            dataIndex: 'fullName',
+                            render: (_, record) => record.name ?? record.fullName,
                         },
                         {
                             title: 'Email',

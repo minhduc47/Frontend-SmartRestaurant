@@ -1,5 +1,5 @@
 import { deleteUserAPI, getUsersAPI } from '@/services/api';
-import { dateRangeValidate } from '@/services/helper';
+import { buildSpringFilter, dateRangeValidate, sfContainsIgnoreCase, sfDateRangeInclusive } from '@/services/helper';
 import { DeleteTwoTone, EditTwoTone, ExportOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
@@ -101,7 +101,7 @@ const TableUser = () => {
     };
 
     const refreshTable = () => {
-        actionRef.current?.reload();
+        actionRef.current?.reloadAndRest?.();
     };
 
     const handleDelete = async (id: number) => {
@@ -121,22 +121,26 @@ const TableUser = () => {
                 actionRef={actionRef}
                 cardBordered
                 request={async (params, sort) => {
-                    let query = `page=${params.current ?? 1}&pageSize=${params.pageSize ?? 5}`;
-                    if (params.name) query += `&name=/${params.name}/i`;
-                    if (params.email) query += `&email=/${params.email}/i`;
+                    const queryParams = new URLSearchParams();
+                    queryParams.set('page', String(params.current ?? 1));
+                    queryParams.set('size', String(params.pageSize ?? 5));
 
                     const createdAtRange = dateRangeValidate(params.createdAtRange);
-                    if (createdAtRange) {
-                        query += `&createdAt>=${createdAtRange[0]}&createdAt<=${createdAtRange[1]}`;
-                    }
+                    const filter = buildSpringFilter([
+                        params.name ? sfContainsIgnoreCase('name', params.name) : undefined,
+                        params.email ? sfContainsIgnoreCase('email', params.email) : undefined,
+                        createdAtRange ? sfDateRangeInclusive('createdAt', createdAtRange[0], createdAtRange[1]) : undefined,
+                    ]);
+
+                    if (filter) queryParams.set('filter', filter);
 
                     if (sort?.createdAt) {
-                        query += `&sort=${sort.createdAt === 'ascend' ? 'createdAt' : '-createdAt'}`;
+                        queryParams.set('sort', sort.createdAt === 'ascend' ? 'createdAt' : '-createdAt');
                     } else {
-                        query += '&sort=-createdAt';
+                        queryParams.set('sort', '-id');
                     }
 
-                    const res = await getUsersAPI(query);
+                    const res = await getUsersAPI(queryParams.toString());
                     if (res.data) {
                         setMeta({
                             current: res.data.meta.page,

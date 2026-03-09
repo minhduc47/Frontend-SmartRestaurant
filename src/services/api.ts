@@ -1,4 +1,5 @@
 import axios from 'services/axios.customize';
+import { normalizePagingQuery } from './helper';
 
 export const loginAPI = (username: string, password: string) => {
     const urlBackend = '/auth/login';
@@ -21,7 +22,8 @@ export const logoutAPI = () => {
 };
 
 export const getUsersAPI = (query: string) => {
-    const urlBackend = `/users?${query}`; // BE: GET /api/v1/users
+    const normalized = normalizePagingQuery(query);
+    const urlBackend = normalized ? `/users?${normalized}` : '/users'; // BE: GET /api/v1/users
     return axios.get<IBackendRes<IModelPaginate<IUserTable>>>(urlBackend);
 };
 
@@ -74,8 +76,30 @@ export const updateUserPasswordAPI = (email: string, oldpass: string, newpass: s
 };
 
 export const getListOrdersAPI = (query: string) => {
-    const urlBackend = `/orders?${query}`; // BE: GET /api/v1/orders
+    const normalized = normalizePagingQuery(query);
+    const urlBackend = normalized ? `/orders?${normalized}` : '/orders'; // BE: GET /api/v1/orders
     return axios.get<IBackendRes<IModelPaginate<IOrderTable>>>(urlBackend);
+};
+
+export const getTablesAPI = (query = 'page=1&size=200') => {
+    const normalized = normalizePagingQuery(query);
+    const urlBackend = normalized ? `/tables?${normalized}` : '/tables'; // BE: GET /api/v1/tables
+    return axios.get<IBackendRes<IModelPaginate<IRestaurantTable>>>(urlBackend);
+};
+
+export const createTableAPI = (data: { name: string; qrToken?: string }) => {
+    const urlBackend = '/tables'; // BE: POST /api/v1/tables
+    return axios.post<IBackendRes<IRestaurantTable>>(urlBackend, data);
+};
+
+export const updateTableAPI = (id: number, data: { name: string; qrToken?: string }) => {
+    const urlBackend = `/tables/${id}`; // BE: PUT /api/v1/tables/{id}
+    return axios.put<IBackendRes<IRestaurantTable>>(urlBackend, data);
+};
+
+export const deleteTableAPI = (id: number) => {
+    const urlBackend = `/tables/${id}`; // BE: DELETE /api/v1/tables/{id}
+    return axios.delete<IBackendRes<unknown>>(urlBackend);
 };
 
 // TODO: BE chưa có endpoint /database/dashboard → DEAD CODE

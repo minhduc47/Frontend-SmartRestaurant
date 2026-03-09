@@ -36,7 +36,7 @@ const CreateUser = (props: IProps) => {
         if (res.data) {
             form.resetFields();
             setIsOpenCreate(false);
-            message.success('User created successfully!');
+            message.success(`Da tao user ${values.email} thanh cong`);
             refreshTable();
         } else {
             // Handle error case

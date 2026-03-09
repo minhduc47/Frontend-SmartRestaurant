@@ -1,4 +1,5 @@
 import { getCategoryAPI, updateDishAPI, uploadFileAPI } from '@/services/dish.api';
+import { resolveStorageUrl } from '@/services/helper';
 import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import {
     App,
@@ -75,7 +76,7 @@ const UpdateDish = ({
                 uid: `existing-${dishEditing.id}`,
                 name: dishEditing.image,
                 status: 'done',
-                url: dishEditing.image,
+                url: resolveStorageUrl(dishEditing.image, 'dish'),
             };
             setFileList([existingImage]);
             form.setFieldsValue({

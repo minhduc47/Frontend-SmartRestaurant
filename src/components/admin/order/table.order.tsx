@@ -1,5 +1,5 @@
 import { getListOrdersAPI } from '@/services/api';
-import { dateRangeValidate } from '@/services/helper';
+import { buildSpringFilter, dateRangeValidate, sfDateRangeInclusive } from '@/services/helper';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import { Tag } from 'antd';
@@ -87,21 +87,25 @@ const TableOrder = () => {
             actionRef={actionRef}
             cardBordered
             request={async (params, sort) => {
-                let query = `page=${params.current ?? 1}&pageSize=${params.pageSize ?? 5}`;
-                if (params.orderType) query += `&orderType=${params.orderType}`;
+                const queryParams = new URLSearchParams();
+                queryParams.set('page', String(params.current ?? 1));
+                queryParams.set('size', String(params.pageSize ?? 5));
 
                 const createdAtRange = dateRangeValidate(params.createdAtRange);
-                if (createdAtRange) {
-                    query += `&createdAt>=${createdAtRange[0]}&createdAt<=${createdAtRange[1]}`;
-                }
+                const filter = buildSpringFilter([
+                    params.orderType ? `orderType : '${params.orderType}'` : undefined,
+                    createdAtRange ? sfDateRangeInclusive('createdAt', createdAtRange[0], createdAtRange[1]) : undefined,
+                ]);
+
+                if (filter) queryParams.set('filter', filter);
 
                 if (sort?.createdAt) {
-                    query += `&sort=${sort.createdAt === 'ascend' ? 'createdAt' : '-createdAt'}`;
+                    queryParams.set('sort', sort.createdAt === 'ascend' ? 'createdAt' : '-createdAt');
                 } else {
-                    query += '&sort=-createdAt';
+                    queryParams.set('sort', '-createdAt');
                 }
 
-                const res = await getListOrdersAPI(query);
+                const res = await getListOrdersAPI(queryParams.toString());
                 if (res.data) {
                     setMeta({
                         current: res.data.meta.page,

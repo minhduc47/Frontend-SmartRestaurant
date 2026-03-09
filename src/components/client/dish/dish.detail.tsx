@@ -4,6 +4,7 @@ import { Row, Col, Button, InputNumber, Typography, Divider, message, Card, Tag 
 import { ShoppingCartOutlined } from '@ant-design/icons';
 import { getDishByIdAPI } from '@/services/dish.api';
 import { useCurrentApp } from '@/components/context/app.context';
+import { resolveStorageUrl } from '@/services/helper';
 import './dish.detail.scss';
 
 const { Title, Text, Paragraph } = Typography;
@@ -72,7 +73,7 @@ const DishDetail = () => {
                 <Row gutter={[32, 32]}>
                     <Col xs={24} md={12}>
                         <img
-                            src={`${import.meta.env.VITE_API_URL}/storage/dish/${dish.image}`}
+                            src={resolveStorageUrl(dish.image, 'dish')}
                             alt={dish.name}
                             style={{ width: '100%', borderRadius: 12, objectFit: 'cover' }}
                         />

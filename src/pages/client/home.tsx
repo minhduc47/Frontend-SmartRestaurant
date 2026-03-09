@@ -7,13 +7,14 @@ import { useEffect, useState } from "react";
 import type { GetProp } from 'antd';
 import { useNavigate, useOutletContext } from "react-router";
 import MobileFilter from "@/components/client/dish/mobile.filter";
-type ISelectOption = { label: string; value: string };
+import { buildSpringFilter, resolveStorageUrl, sfContainsIgnoreCase } from "@/services/helper";
+type ISelectOption = { label: string; value: number };
 interface FieldType {
     range?: {
         from?: number;
         to?: number;
     };
-    category?: string[];
+    category?: number[];
 }
 const HomePage = () => {
     const { searchTerm } = useOutletContext() as any;
@@ -23,7 +24,7 @@ const HomePage = () => {
 
     const items: TabsProps['items'] = [
         {
-            key: 'sort=-sold',
+            key: 'sort=-createdAt',
             label: 'Phổ biến',
             children: <></>,
         },
@@ -51,7 +52,7 @@ const HomePage = () => {
     });
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [filter, setFilter] = useState<string>("");
-    const [sortQuery, setSortQuery] = useState<string>("sort=-sold");
+    const [sortQuery, setSortQuery] = useState<string>("sort=-createdAt");
     const [form] = Form.useForm();
     const navigate = useNavigate();
     const [isShowMobileFilter, setIsShowMobileFilter] = useState<boolean>(false);
@@ -62,7 +63,7 @@ const HomePage = () => {
             if (response && response.data) {
                 const cats = response.data.result.map((c) => ({
                     label: c.name,
-                    value: c.name,
+                    value: c.id,
                 }));
                 setCategories(cats);
             }
@@ -76,17 +77,23 @@ const HomePage = () => {
 
     const fetchBooks = async () => {
         setIsLoading(true);
-        let query = `current=${meta.current}&pageSize=${meta.pageSize}`;
+        const queryParams = new URLSearchParams();
+        queryParams.set('page', String(meta.current));
+        queryParams.set('size', String(meta.pageSize));
         if (sortQuery) {
-            query += `&${sortQuery}`;
+            queryParams.set('sort', sortQuery.replace('sort=', ''));
         }
-        if (filter) {
-            query += `${filter}`;
+
+        const filterExpression = buildSpringFilter([
+            filter || undefined,
+            searchTerm ? sfContainsIgnoreCase('name', searchTerm) : undefined,
+        ]);
+
+        if (filterExpression) {
+            queryParams.set('filter', filterExpression);
         }
-        if (searchTerm) {
-            query += `&name=${searchTerm}`;
-        }
-        const res = await getListDishAPI(query);
+
+        const res = await getListDishAPI(queryParams.toString());
         if (res.data) {
             setMeta({
                 current: res.data?.meta.page,
@@ -119,9 +126,10 @@ const HomePage = () => {
     }
 
     const handleOnClickCategory: GetProp<typeof Checkbox.Group, 'onChange'> = (checkedValues) => {
-        let query = "";
-        if (Array.isArray(checkedValues) && checkedValues.length > 0) {
-            query += `&category=${checkedValues.join(",")}`;
+        const selected = (checkedValues as number[]) ?? [];
+        let query = '';
+        if (selected.length > 0) {
+            query = `category.id in [${selected.join(',')}]`;
         }
         setFilter(query);
     };
@@ -129,20 +137,22 @@ const HomePage = () => {
     const onFinish: FormProps<FieldType>['onFinish'] = async (values: FieldType) => {
         const range = values.range || {};
         const { from, to } = range;
-        let query = "";
-        if (from !== undefined && to !== undefined) {
-            query += `&price>=${from}&price<=${to}`;
-        }
-        if (values.category && values.category.length > 0) {
-            query += `&category=${values.category.join(",")}`;
-        }
+        const categoryFilters = values.category && values.category.length > 0
+            ? `category.id in [${values.category.join(',')}]`
+            : undefined;
+
+        const priceFilter = from !== undefined && to !== undefined
+            ? `price >: ${from} and price <: ${to}`
+            : undefined;
+
+        const query = buildSpringFilter([categoryFilters, priceFilter]) ?? '';
         setFilter(query);
     };
 
     const handleOnReset = () => {
         form.resetFields()
         setFilter("");
-        setSortQuery("sort=-sold");
+        setSortQuery("sort=-createdAt");
         setMeta({
             current: 1,
             pageSize: 5,
@@ -241,7 +251,7 @@ const HomePage = () => {
                         <Spin spinning={isLoading} tip="Loading..." >
                             <Row>
                                 <Tabs
-                                    style={{ overflowX: "auto" }} defaultActiveKey="sort=-sold" items={items} onChange={(key) => { handleOnKeyChange(key) }}>
+                                    style={{ overflowX: "auto" }} defaultActiveKey="sort=-createdAt" items={items} onChange={(key) => { handleOnKeyChange(key) }}>
                                 </Tabs>
                                 <Col
                                     xs={24} md={0}
@@ -282,7 +292,7 @@ const HomePage = () => {
                                             }}
                                         >
                                             <img
-                                                src={book.image}
+                                                src={resolveStorageUrl(book.image, 'dish')}
                                                 alt={book.name}
                                                 style={{
                                                     width: 120,

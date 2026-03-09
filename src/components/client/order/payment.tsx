@@ -1,8 +1,9 @@
 import { useCurrentApp } from "@/components/context/app.context";
-import { Form, Radio, Input, Button, FormProps, App, Empty } from "antd";
+import { Form, Radio, Input, Button, FormProps, App, Empty, Select } from "antd";
 import { DeleteTwoTone } from "@ant-design/icons";
 import { useEffect, useState } from "react";
-import { createOrderAPI } from "@/services/api";
+import { createOrderAPI, getTablesAPI } from "@/services/api";
+import { resolveStorageUrl } from "@/services/helper";
 
 interface IProps {
     currentStep: number;
@@ -24,6 +25,7 @@ const Payment = (props: IProps) => {
     const [form] = Form.useForm<FieldType>();
     const { message } = App.useApp();
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [tableOptions, setTableOptions] = useState<{ label: string; value: number }[]>([]);
 
     const handleDelete = (dishId: number) => {
         const updated = carts.filter((item) => item.dish.id !== dishId);
@@ -35,6 +37,21 @@ const Payment = (props: IProps) => {
         const sum = carts.reduce((acc, item) => acc + item.dish.price * item.quantity, 0);
         setTotalPrice(sum);
     }, [carts]);
+
+    useEffect(() => {
+        const fetchTables = async () => {
+            const res = await getTablesAPI('page=1&pageSize=200');
+            if (res.data) {
+                setTableOptions(
+                    res.data.result
+                        .filter((table) => table.occupied === 'AVAILABLE')
+                        .map((table) => ({ label: table.name, value: table.id }))
+                );
+            }
+        };
+
+        fetchTables();
+    }, []);
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
         if (carts.length === 0) {
@@ -85,7 +102,7 @@ const Payment = (props: IProps) => {
                             }}
                         >
                             <img
-                                src={`${import.meta.env.VITE_API_URL}/storage/dish/${item.dish.image}`}
+                                src={resolveStorageUrl(item.dish.image, 'dish')}
                                 alt={item.dish.name}
                                 style={{ width: 60, height: 60, objectFit: 'cover', borderRadius: 4, marginRight: 16 }}
                             />
@@ -143,12 +160,19 @@ const Payment = (props: IProps) => {
                                     if (getFieldValue('orderType') === 'DELIVERY' || value) {
                                         return Promise.resolve();
                                     }
-                                    return Promise.reject(new Error('Vui long nhap so ban'));
+                                    return Promise.reject(new Error('Vui long chon ban'));
                                 },
                             }),
                         ]}
                     >
-                        <Input type="number" placeholder="Nhap so ban" />
+                        <Select
+                            placeholder="Chon ban"
+                            options={tableOptions}
+                            showSearch
+                            filterOption={(input, option) =>
+                                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                            }
+                        />
                     </Form.Item>
 
                     <Form.Item label="Ghi chu" name="note">

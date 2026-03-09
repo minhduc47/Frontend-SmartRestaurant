@@ -4,6 +4,7 @@ import {
     ExceptionOutlined,
     HeartTwoTone,
     TeamOutlined,
+    TableOutlined,
     UserOutlined,
     DollarCircleOutlined,
     MenuFoldOutlined,
@@ -52,6 +53,11 @@ const LayoutAdmin = () => {
             label: <Link to='/admin/order'>Manage Orders</Link>,
             key: '/admin/order',
             icon: <DollarCircleOutlined />
+        },
+        {
+            label: <Link to='/admin/table'>Manage Tables</Link>,
+            key: '/admin/table',
+            icon: <TableOutlined />
         },
 
     ];

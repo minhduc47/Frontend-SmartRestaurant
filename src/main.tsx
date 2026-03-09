@@ -18,6 +18,7 @@ import DashBoardPage from 'pages/admin/dashboard';
 import ManageDishPage from 'pages/admin/manage.dish';
 import ManageOrderPage from 'pages/admin/manage.order';
 import ManageUserPage from 'pages/admin/manage.user';
+import ManageTablePage from 'pages/admin/manage.table';
 import LayoutAdmin from 'components/layout/layout.admin';
 import enUS from 'antd/locale/en_US';
 import "react-image-gallery/styles/css/image-gallery.css";
@@ -91,6 +92,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <ManageUserPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "table",
+        element: (
+          <ProtectedRoute>
+            <ManageTablePage />
           </ProtectedRoute>
         ),
       },

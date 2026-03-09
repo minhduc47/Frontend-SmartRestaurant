@@ -1,5 +1,6 @@
-import { createOrderAPI } from '@/services/api';
+import { createOrderAPI, getTablesAPI } from '@/services/api';
 import { getCategoryAPI, getListDishAPI } from '@/services/dish.api';
+import { resolveStorageUrl } from '@/services/helper';
 import {
     DeleteOutlined,
     MinusOutlined,
@@ -42,12 +43,6 @@ interface ICartItem {
 const VND = (amount: number) =>
     new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 
-// Table numbers 1–20
-const TABLE_OPTIONS = Array.from({ length: 20 }, (_, i) => ({
-    label: `Bàn ${i + 1}`,
-    value: i + 1,
-}));
-
 // ── component ─────────────────────────────────────────────────────────────────
 
 const DishOrderPage = () => {
@@ -58,6 +53,7 @@ const DishOrderPage = () => {
     const [categories, setCategories] = useState<ICategory[]>([]);
     const [loadingDishes, setLoadingDishes] = useState(true);
     const [activeCategory, setActiveCategory] = useState<string>('all');
+    const [tableOptions, setTableOptions] = useState<{ label: string; value: number }[]>([]);
 
     // ── cart state ──────────────────────────────────────────────────────────
     const [cart, setCart] = useState<Map<number, ICartItem>>(new Map());
@@ -68,12 +64,20 @@ const DishOrderPage = () => {
     useEffect(() => {
         const fetchAll = async () => {
             setLoadingDishes(true);
-            const [dishRes, catRes] = await Promise.all([
+            const [dishRes, catRes, tableRes] = await Promise.all([
                 getListDishAPI('page=1&pageSize=100&sort=-createdAt'),
                 getCategoryAPI(),
+                getTablesAPI('page=1&pageSize=200'),
             ]);
             if (dishRes.data) setDishes(dishRes.data.result.filter((d) => d.active));
             if (catRes.data) setCategories(catRes.data.result); // getCategoryAPI trả về IModelPaginate
+            if (tableRes.data) {
+                setTableOptions(
+                    tableRes.data.result
+                        .filter((table) => table.occupied === 'AVAILABLE')
+                        .map((table) => ({ label: table.name, value: table.id }))
+                );
+            }
             setLoadingDishes(false);
         };
         fetchAll();
@@ -236,7 +240,7 @@ const DishOrderPage = () => {
                                                 cover={
                                                     <img
                                                         alt={dish.name}
-                                                        src={dish.image}
+                                                        src={resolveStorageUrl(dish.image, 'dish')}
                                                         style={{
                                                             height: 140,
                                                             objectFit: 'cover',
@@ -328,7 +332,7 @@ const DishOrderPage = () => {
                                 <Text strong>Số bàn</Text>
                                 <Select
                                     placeholder="Chọn bàn..."
-                                    options={TABLE_OPTIONS}
+                                    options={tableOptions}
                                     value={tableId}
                                     onChange={setTableId}
                                     style={{ width: '100%' }}
