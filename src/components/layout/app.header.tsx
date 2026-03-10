@@ -41,19 +41,19 @@ const AppHeader = (props: IProps) => {
                         setOpenUpdateUser(true);
                     }}
                 >
-                    Quan ly tai khoan
+                    Quản lý tài khoản
                 </label>
             ),
             key: 'account',
         },
         {
-            label: <Link to="/history">Lich su don hang</Link>,
+            label: <Link to="/history">Lịch sử đơn hàng</Link>,
             key: 'history',
         },
         {
             label: (
                 <label style={{ cursor: 'pointer' }} onClick={() => handleLogout()}>
-                    Dang xuat
+                    Đăng xuất
                 </label>
             ),
             key: 'logout',
@@ -62,7 +62,7 @@ const AppHeader = (props: IProps) => {
 
     if (user?.role?.name === 'ADMIN') {
         items.unshift({
-            label: <Link to="/admin">Trang quan tri</Link>,
+            label: <Link to="/admin">Trang quản trị</Link>,
             key: 'admin',
         });
     }
@@ -83,10 +83,10 @@ const AppHeader = (props: IProps) => {
                 </div>
                 {carts.length > 0 ? (
                     <div className="pop-cart-footer">
-                        <button onClick={() => navigate('/order')}>Xem gio hang</button>
+                        <button onClick={() => navigate('/order')}>Xem giỏ hàng</button>
                     </div>
                 ) : (
-                    <Empty description="Khong co san pham trong gio hang" />
+                    <Empty description="Không có sản phẩm trong giỏ hàng" />
                 )}
             </div>
         );
@@ -110,7 +110,7 @@ const AppHeader = (props: IProps) => {
                             <input
                                 className="input-search"
                                 type="text"
-                                placeholder="Ban tim gi hom nay"
+                                placeholder="Bạn muốn tìm gì hôm nay?"
                                 value={props.searchTerm}
                                 onChange={(e) => props.setSearchTerm(e.target.value)}
                             />
@@ -123,7 +123,7 @@ const AppHeader = (props: IProps) => {
                                     className="popover-carts"
                                     placement="topRight"
                                     rootClassName="popover-carts"
-                                    title={'Mon vua them'}
+                                    title={' món vừa thêm'}
                                     content={contentPopover}
                                     arrow
                                 >

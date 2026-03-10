@@ -3,7 +3,6 @@ import {
     AppstoreOutlined,
     ExceptionOutlined,
     HeartTwoTone,
-    TeamOutlined,
     TableOutlined,
     UserOutlined,
     DollarCircleOutlined,
@@ -33,16 +32,9 @@ const LayoutAdmin = () => {
             icon: <AppstoreOutlined />
         },
         {
-            label: <span>Manage Users</span>,
+            label: <Link to='/admin/user'>Manage Users</Link>,
             key: '/admin/user',
             icon: <UserOutlined />,
-            children: [
-                {
-                    label: <Link to='/admin/user'>CRUD</Link>,
-                    key: '/admin/user',
-                    icon: <TeamOutlined />,
-                },
-            ]
         },
         {
             label: <Link to='/admin/dish'>Manage Dishes</Link>,
