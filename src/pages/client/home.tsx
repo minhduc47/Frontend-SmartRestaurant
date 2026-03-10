@@ -48,16 +48,19 @@ const testimonials = [
 const blogs = [
     {
         id: 1,
+        image: '/webtop/blog_1.png',
         title: 'Nghe thuat ket hop ruou vang va mon Au',
         desc: 'Cach lua chon ruou vang phu hop voi tung nhom huong vi de nang tam bua toi.',
     },
     {
         id: 2,
+        image: '/webtop/blog_2.png',
         title: '5 nguyen lieu theo mua lam nen menu dac biet',
         desc: 'Tu nong trai den ban an, hanh trinh cua nguyen lieu tuoi va sach trong tung mon.',
     },
     {
         id: 3,
+        image: '/webtop/blog_3.png',
         title: 'Bi quyet tao nen mon khai vi day an tuong',
         desc: 'Can bang ket cau, nhiet do va gia vi de mo dau bua an mot cach tinh te.',
     },
@@ -89,9 +92,9 @@ const HomePage = () => {
 
     const chefCards = useMemo(
         () => [
-            { name: 'Chef Minh', role: 'Head Chef' },
-            { name: 'Chef Anh', role: 'Pastry Chef' },
-            { name: 'Chef Phuong', role: 'Sous Chef' },
+            { name: 'Chef Minh', role: 'Head Chef', image: '/webtop/chefs_1.png' },
+            { name: 'Chef Anh', role: 'Pastry Chef', image: '/webtop/chefs_2.png' },
+            { name: 'Chef Phuong', role: 'Sous Chef', image: '/webtop/chefs_3.png' },
         ],
         []
     );
@@ -100,7 +103,7 @@ const HomePage = () => {
         <div className="restaurant-home">
             <section className="hero-section">
                 <div className="hero-overlay" />
-                <div className="hero-content">
+                <div className="hero-content reveal-up">
                     <p className="hero-kicker">Fine Dining Experience</p>
                     <h1>
                         Huong vi tinh te,
@@ -129,7 +132,7 @@ const HomePage = () => {
                         <h2>Chung toi ton vinh am thuc bang su sang tao va tam huyet</h2>
                     </div>
                     <Row gutter={[24, 24]}>
-                        <Col xs={24} md={12}>
+                        <Col xs={24} md={12} className="reveal-up delay-1">
                             <Card bordered={false} className="soft-card">
                                 <h3>Nguyen lieu chon loc</h3>
                                 <p>
@@ -138,8 +141,11 @@ const HomePage = () => {
                                 </p>
                             </Card>
                         </Col>
-                        <Col xs={24} md={12}>
-                            <Card bordered={false} className="soft-card">
+                        <Col xs={24} md={12} className="reveal-up delay-2">
+                            <div className="about-photo-wrap">
+                                <img src="/webtop/about.png" alt="about" />
+                            </div>
+                            <Card bordered={false} className="soft-card about-secondary-card">
                                 <h3>Phong cach hien dai</h3>
                                 <p>
                                     Ket hop ky thuat am thuc quoc te va huong vi dia phuong de tao nen trai nghiem can bang va
@@ -168,7 +174,7 @@ const HomePage = () => {
 
                     <Row gutter={[20, 20]}>
                         {featuredDishes.map((dish) => (
-                            <Col key={dish.id} xs={24} sm={12} lg={8}>
+                            <Col key={dish.id} xs={24} sm={12} lg={8} className="reveal-up">
                                 <Card
                                     hoverable
                                     className="dish-card"
@@ -198,9 +204,11 @@ const HomePage = () => {
                     </div>
                     <Row gutter={[20, 20]}>
                         {chefCards.map((chef) => (
-                            <Col xs={24} md={8} key={chef.name}>
+                            <Col xs={24} md={8} key={chef.name} className="reveal-up">
                                 <Card className="chef-card" bordered={false}>
-                                    <div className="avatar-placeholder">{chef.name.charAt(5)}</div>
+                                    <div className="chef-image-wrap">
+                                        <img src={chef.image} alt={chef.name} />
+                                    </div>
                                     <h3>{chef.name}</h3>
                                     <p>{chef.role}</p>
                                 </Card>
@@ -241,8 +249,11 @@ const HomePage = () => {
 
                     <Row gutter={[20, 20]}>
                         {blogs.map((blog) => (
-                            <Col xs={24} md={8} key={blog.id}>
+                            <Col xs={24} md={8} key={blog.id} className="reveal-up">
                                 <Card className="blog-card" bordered={false}>
+                                    <div className="blog-image-wrap">
+                                        <img src={blog.image} alt={blog.title} />
+                                    </div>
                                     <h3>{blog.title}</h3>
                                     <p>{blog.desc}</p>
                                     <button>Xem them</button>
