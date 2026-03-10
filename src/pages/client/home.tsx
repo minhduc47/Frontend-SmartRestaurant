@@ -1,371 +1,316 @@
-import { getCategoryAPI, getListDishAPI } from "@/services/dish.api";
-import { FilterTwoTone, ReloadOutlined } from "@ant-design/icons";
-import { Button, Checkbox, Col, Divider, Form, InputNumber, Pagination, Rate, Row, Spin } from "antd";
-import { Tabs } from "antd";
-import type { FormProps, TabsProps } from 'antd';
-import { useEffect, useState } from "react";
-import type { GetProp } from 'antd';
-import { useNavigate, useOutletContext } from "react-router";
-import MobileFilter from "@/components/client/dish/mobile.filter";
-import { buildSpringFilter, resolveStorageUrl, sfContainsIgnoreCase } from "@/services/helper";
-type ISelectOption = { label: string; value: number };
-interface FieldType {
-    range?: {
-        from?: number;
-        to?: number;
-    };
-    category?: number[];
+import { useEffect, useMemo, useState } from 'react';
+import {
+    Button,
+    Card,
+    Carousel,
+    Col,
+    DatePicker,
+    Form,
+    Input,
+    InputNumber,
+    message,
+    Row,
+    Space,
+    TimePicker,
+} from 'antd';
+import { ArrowRightOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router';
+import { getCategoryAPI, getListDishAPI } from '@/services/dish.api';
+import { resolveStorageUrl } from '@/services/helper';
+import './home.scss';
+
+interface ICategoryOption {
+    label: string;
+    value: number;
 }
+
+const testimonials = [
+    {
+        name: 'Mosan Cameron',
+        role: 'Giam doc dieu hanh',
+        feedback:
+            'Khong gian nha hang tuyet voi, mon an vuot xa mong doi va dich vu rat chu dao. Toi chac chan se quay lai.',
+    },
+    {
+        name: 'Sarah Johnson',
+        role: 'Marketing Manager',
+        feedback:
+            'Trai nghiem am thuc dang nho, mon an duoc trinh bay dep mat va huong vi rat can bang. Rat dang thu.',
+    },
+    {
+        name: 'John Carter',
+        role: 'Creative Director',
+        feedback:
+            'Buoi toi tuyet voi voi khong khi am cung, nhan vien than thien va menu trang mieng rat an tuong.',
+    },
+];
+
+const blogs = [
+    {
+        id: 1,
+        title: 'Nghe thuat ket hop ruou vang va mon Au',
+        desc: 'Cach lua chon ruou vang phu hop voi tung nhom huong vi de nang tam bua toi.',
+    },
+    {
+        id: 2,
+        title: '5 nguyen lieu theo mua lam nen menu dac biet',
+        desc: 'Tu nong trai den ban an, hanh trinh cua nguyen lieu tuoi va sach trong tung mon.',
+    },
+    {
+        id: 3,
+        title: 'Bi quyet tao nen mon khai vi day an tuong',
+        desc: 'Can bang ket cau, nhiet do va gia vi de mo dau bua an mot cach tinh te.',
+    },
+];
+
 const HomePage = () => {
-    const { searchTerm } = useOutletContext() as any;
-    const [categories, setCategories] = useState<ISelectOption[]>([]);
-
-    const [books, setBooks] = useState<IDish[]>([]);
-
-    const items: TabsProps['items'] = [
-        {
-            key: 'sort=-createdAt',
-            label: 'Phổ biến',
-            children: <></>,
-        },
-        {
-            key: 'sort=-updatedAt',
-            label: 'Hàng Mới',
-            children: <></>,
-        },
-        {
-            key: 'sort=price',
-            label: 'Giá Thấp Đến Cao',
-            children: <></>,
-        },
-        {
-            key: 'sort=-price',
-            label: 'Giá Cao Đến Thấp',
-            children: <></>,
-        },
-    ];
-    const [meta, setMeta] = useState({
-        current: 1,
-        pageSize: 5,
-        pages: 0,
-        total: 0,
-    });
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [filter, setFilter] = useState<string>("");
-    const [sortQuery, setSortQuery] = useState<string>("sort=-createdAt");
-    const [form] = Form.useForm();
     const navigate = useNavigate();
-    const [isShowMobileFilter, setIsShowMobileFilter] = useState<boolean>(false);
+    const [featuredDishes, setFeaturedDishes] = useState<IDish[]>([]);
+    const [categories, setCategories] = useState<ICategoryOption[]>([]);
+
     useEffect(() => {
-        // Fetch categories from the API
-        const fetchCategories = async () => {
-            const response = await getCategoryAPI();
-            if (response && response.data) {
-                const cats = response.data.result.map((c) => ({
-                    label: c.name,
-                    value: c.id,
-                }));
-                setCategories(cats);
+        const loadData = async () => {
+            const categoryRes = await getCategoryAPI();
+            if (categoryRes?.data?.result) {
+                setCategories(
+                    categoryRes.data.result.map((c) => ({
+                        label: c.name,
+                        value: c.id,
+                    }))
+                );
             }
+
+            const dishRes = await getListDishAPI('page=1&size=6&sort=-createdAt');
+            setFeaturedDishes(dishRes?.data?.result ?? []);
         };
-        fetchCategories();
+
+        loadData();
     }, []);
 
-    useEffect(() => {
-        fetchBooks();
-    }, [meta.current, meta.pageSize, filter, sortQuery, searchTerm]);
-
-    const fetchBooks = async () => {
-        setIsLoading(true);
-        const queryParams = new URLSearchParams();
-        queryParams.set('page', String(meta.current));
-        queryParams.set('size', String(meta.pageSize));
-        if (sortQuery) {
-            queryParams.set('sort', sortQuery.replace('sort=', ''));
-        }
-
-        const filterExpression = buildSpringFilter([
-            filter || undefined,
-            searchTerm ? sfContainsIgnoreCase('name', searchTerm) : undefined,
-        ]);
-
-        if (filterExpression) {
-            queryParams.set('filter', filterExpression);
-        }
-
-        const res = await getListDishAPI(queryParams.toString());
-        if (res.data) {
-            setMeta({
-                current: res.data?.meta.page,
-                pageSize: res.data?.meta.pageSize,
-                pages: res.data?.meta.pages,
-                total: res.data?.meta.total,
-            });
-            setBooks(res.data?.result ?? []);
-        }
-        setIsLoading(false);
-    };
-
-    const handleOnChangePage = (pagination: { current: number; pageSize: number; }) => {
-        if (pagination && pagination.current !== meta.current) {
-            setMeta({
-                ...meta,
-                current: pagination.current,
-            });
-        }
-        if (pagination && pagination.pageSize !== meta.pageSize) {
-            setMeta({
-                ...meta,
-                pageSize: pagination.pageSize,
-            });
-        }
-    }
-
-    const handleOnKeyChange = (key: string) => {
-        setSortQuery(`${key}`);
-    }
-
-    const handleOnClickCategory: GetProp<typeof Checkbox.Group, 'onChange'> = (checkedValues) => {
-        const selected = (checkedValues as number[]) ?? [];
-        let query = '';
-        if (selected.length > 0) {
-            query = `category.id in [${selected.join(',')}]`;
-        }
-        setFilter(query);
-    };
-
-    const onFinish: FormProps<FieldType>['onFinish'] = async (values: FieldType) => {
-        const range = values.range || {};
-        const { from, to } = range;
-        const categoryFilters = values.category && values.category.length > 0
-            ? `category.id in [${values.category.join(',')}]`
-            : undefined;
-
-        const priceFilter = from !== undefined && to !== undefined
-            ? `price >: ${from} and price <: ${to}`
-            : undefined;
-
-        const query = buildSpringFilter([categoryFilters, priceFilter]) ?? '';
-        setFilter(query);
-    };
-
-    const handleOnReset = () => {
-        form.resetFields()
-        setFilter("");
-        setSortQuery("sort=-createdAt");
-        setMeta({
-            current: 1,
-            pageSize: 5,
-            pages: 0,
-            total: 0,
-        });
-    }
+    const chefCards = useMemo(
+        () => [
+            { name: 'Chef Minh', role: 'Head Chef' },
+            { name: 'Chef Anh', role: 'Pastry Chef' },
+            { name: 'Chef Phuong', role: 'Sous Chef' },
+        ],
+        []
+    );
 
     return (
-        <>
-            <div style={{ padding: "24px", background: "#f0f2f5", minHeight: "100vh" }}>
-                <Row gutter={[24, 20]}>
-                    <Col
-                        lg={2}
-                        md={4}
-                        sm={0}
-                        xs={0}
-                        style={{
-                            background: "#fff",
-                            borderRadius: 12,
-                            boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
-                            padding: "20px 16px",
-                            minWidth: 240,
-                            marginRight: 24,
-                        }}
-                    >
-                        <div style={{ justifyContent: "space-between", display: "flex", alignItems: "center", marginBottom: 16 }}>
-                            <span style={{ fontWeight: 600, fontSize: 18 }}><FilterTwoTone /> Bộ lọc tìm kiếm</span>
-                            <ReloadOutlined style={{ fontSize: "20px", color: "#1890ff", cursor: "pointer" }} onClick={() => handleOnReset()} />
-                        </div>
-                        <Form form={form} onFinish={onFinish}>
-                            <Form.Item label="Danh mục sản phẩm" name="category" labelCol={{ span: 24 }}>
-                                <Checkbox.Group onChange={handleOnClickCategory}>
-                                    <Row>
-                                        {categories.map((category, index) => (
-                                            <Col span={24} key={index} style={{ marginBottom: 8 }}>
-                                                <Checkbox value={category.value}>
-                                                    {category.label}
-                                                </Checkbox>
-                                            </Col>
-                                        ))}
-                                    </Row>
-                                </Checkbox.Group>
-                            </Form.Item>
-                            <Divider />
-                            <Form.Item label="Khoảng giá" labelCol={{ span: 24 }}>
-                                <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
-                                    <Form.Item name={["range", "from"]}>
-                                        <InputNumber style={{ width: "100%" }} placeholder="đ TỪ" min={0} formatter={value =>
-                                            value
-                                                ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                                                : ''
-                                        } />
-                                    </Form.Item>
-                                    <span style={{ alignSelf: "center" }}>-</span>
-                                    <Form.Item name={["range", "to"]}>
-                                        <InputNumber style={{ width: "100%" }} placeholder="đ ĐẾN" min={0} formatter={value =>
-                                            value
-                                                ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                                                : ''
-                                        } />
-                                    </Form.Item>
-                                </div>
-                                <div>
-                                    <Button type="primary" style={{ width: "100%" }}
-                                        onClick={() => {
-                                            form.submit();
-                                        }}
-                                    >
-                                        Áp dụng
-                                    </Button>
-                                </div>
-                            </Form.Item>
-                            <Divider />
-                            <Form.Item label="Đánh giá" labelCol={{ span: 24 }}>
-                                {[5, 4, 3, 2, 1].map(rating => (
-                                    <div key={rating} style={{ marginBottom: 8, cursor: "pointer", padding: "4px 0" }}>
-                                        <Rate value={rating} disabled style={{ color: "#ffce3d", fontSize: 14 }} />
-                                        <span style={{ marginLeft: 8, fontSize: 14 }}>{rating === 5 ? "trở lên" : ""}</span>
-                                    </div>
-                                ))}
-                            </Form.Item>
-                        </Form>
-                    </Col>
+        <div className="restaurant-home">
+            <section className="hero-section">
+                <div className="hero-overlay" />
+                <div className="hero-content">
+                    <p className="hero-kicker">Fine Dining Experience</p>
+                    <h1>
+                        Huong vi tinh te,
+                        <br />
+                        khong gian dang cap
+                    </h1>
+                    <p>
+                        Mang den trai nghiem am thuc dinh cao voi nguyen lieu tuoi ngon, phong cach phuc vu chu dao
+                        va khong gian am cung hien dai.
+                    </p>
+                    <Space size={16} wrap>
+                        <Button type="primary" size="large" onClick={() => navigate('/#booking')}>
+                            Dat ban ngay
+                        </Button>
+                        <Button size="large" ghost onClick={() => navigate('/about')}>
+                            Kham pha them <ArrowRightOutlined />
+                        </Button>
+                    </Space>
+                </div>
+            </section>
 
-                    <Col
-                        lg={18}
-                        md={20}
-                        style={{
-                            background: "#fff",
-                            borderRadius: 12,
-                            boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
-                            padding: 24,
-                        }}
-                    >
-                        <Spin spinning={isLoading} tip="Loading..." >
-                            <Row>
-                                <Tabs
-                                    style={{ overflowX: "auto" }} defaultActiveKey="sort=-createdAt" items={items} onChange={(key) => { handleOnKeyChange(key) }}>
-                                </Tabs>
-                                <Col
-                                    xs={24} md={0}
+            <section className="about-section">
+                <div className="section-inner">
+                    <div className="section-heading">
+                        <p>About Us</p>
+                        <h2>Chung toi ton vinh am thuc bang su sang tao va tam huyet</h2>
+                    </div>
+                    <Row gutter={[24, 24]}>
+                        <Col xs={24} md={12}>
+                            <Card bordered={false} className="soft-card">
+                                <h3>Nguyen lieu chon loc</h3>
+                                <p>
+                                    Moi mon an duoc tao nen tu nguyen lieu theo mua, uu tien chat luong va do tuoi moi moi
+                                    ngay.
+                                </p>
+                            </Card>
+                        </Col>
+                        <Col xs={24} md={12}>
+                            <Card bordered={false} className="soft-card">
+                                <h3>Phong cach hien dai</h3>
+                                <p>
+                                    Ket hop ky thuat am thuc quoc te va huong vi dia phuong de tao nen trai nghiem can bang va
+                                    dang nho.
+                                </p>
+                            </Card>
+                        </Col>
+                    </Row>
+                </div>
+            </section>
+
+            <section id="menu" className="menu-section">
+                <div className="section-inner">
+                    <div className="section-heading align-between">
+                        <div>
+                            <p>Featured Menu</p>
+                            <h2>Mon an noi bat</h2>
+                        </div>
+                    </div>
+
+                    <div className="category-pills">
+                        {categories.slice(0, 6).map((category) => (
+                            <span key={category.value}>{category.label}</span>
+                        ))}
+                    </div>
+
+                    <Row gutter={[20, 20]}>
+                        {featuredDishes.map((dish) => (
+                            <Col key={dish.id} xs={24} sm={12} lg={8}>
+                                <Card
+                                    hoverable
+                                    className="dish-card"
+                                    cover={
+                                        <img
+                                            alt={dish.name}
+                                            src={resolveStorageUrl(dish.image, 'dish')}
+                                            onClick={() => navigate(`/dish/${dish.id}`)}
+                                        />
+                                    }
                                 >
-                                    <div style={{ marginBottom: 20 }}>
-                                        <span onClick={() => setIsShowMobileFilter(!isShowMobileFilter)}>
-                                            <span style={{ fontWeight: 600, fontSize: 18 }}><FilterTwoTone /> Bộ lọc tìm kiếm</span>
-                                        </span>
-                                    </div>
+                                    <h3 onClick={() => navigate(`/dish/${dish.id}`)}>{dish.name}</h3>
+                                    <p>{dish.category?.name}</p>
+                                    <strong>{new Intl.NumberFormat('vi-VN').format(dish.price)} VND</strong>
+                                </Card>
+                            </Col>
+                        ))}
+                    </Row>
+                </div>
+            </section>
+
+            <section id="chefs" className="chef-section">
+                <div className="section-inner">
+                    <div className="section-heading">
+                        <p>Our Team</p>
+                        <h2>Nhung dau bep tao nen dau an</h2>
+                    </div>
+                    <Row gutter={[20, 20]}>
+                        {chefCards.map((chef) => (
+                            <Col xs={24} md={8} key={chef.name}>
+                                <Card className="chef-card" bordered={false}>
+                                    <div className="avatar-placeholder">{chef.name.charAt(5)}</div>
+                                    <h3>{chef.name}</h3>
+                                    <p>{chef.role}</p>
+                                </Card>
+                            </Col>
+                        ))}
+                    </Row>
+                </div>
+            </section>
+
+            <section className="testimonial-section">
+                <div className="section-inner">
+                    <div className="section-heading">
+                        <p>Testimonials</p>
+                        <h2>Khach hang noi gi ve chung toi</h2>
+                    </div>
+                    <Carousel autoplay dots>
+                        {testimonials.map((item) => (
+                            <div key={item.name}>
+                                <div className="testimonial-card">
+                                    <blockquote>"{item.feedback}"</blockquote>
+                                    <h4>{item.name}</h4>
+                                    <span>{item.role}</span>
+                                </div>
+                            </div>
+                        ))}
+                    </Carousel>
+                </div>
+            </section>
+
+            <section id="blog" className="blog-section">
+                <div className="section-inner">
+                    <div className="section-heading align-between">
+                        <div>
+                            <p>Latest News</p>
+                            <h2>Bai viet am thuc</h2>
+                        </div>
+                    </div>
+
+                    <Row gutter={[20, 20]}>
+                        {blogs.map((blog) => (
+                            <Col xs={24} md={8} key={blog.id}>
+                                <Card className="blog-card" bordered={false}>
+                                    <h3>{blog.title}</h3>
+                                    <p>{blog.desc}</p>
+                                    <button>Xem them</button>
+                                </Card>
+                            </Col>
+                        ))}
+                    </Row>
+                </div>
+            </section>
+
+            <section id="booking" className="booking-section">
+                <div className="booking-overlay" />
+                <div className="section-inner booking-inner">
+                    <div className="booking-copy">
+                        <p>Reservation</p>
+                        <h2>Dat ban cho toi nay</h2>
+                        <span>
+                            Dat cho som de giu cho ngoi dep nhat. Doi ngu cua chung toi se xac nhan nhanh sau khi tiep nhan.
+                        </span>
+                    </div>
+                    <Card className="booking-form-card" bordered={false}>
+                        <Form
+                            layout="vertical"
+                            onFinish={() => {
+                                message.success('Da gui yeu cau dat ban thanh cong!');
+                            }}
+                        >
+                            <Row gutter={[12, 12]}>
+                                <Col xs={24} md={12}>
+                                    <Form.Item label="Ho va ten" name="name" rules={[{ required: true }]}>
+                                        <Input placeholder="Nguyen Van A" />
+                                    </Form.Item>
+                                </Col>
+                                <Col xs={24} md={12}>
+                                    <Form.Item label="So dien thoai" name="phone" rules={[{ required: true }]}>
+                                        <Input placeholder="09xx xxx xxx" />
+                                    </Form.Item>
+                                </Col>
+                                <Col xs={24} md={12}>
+                                    <Form.Item label="Ngay" name="date" rules={[{ required: true }]}>
+                                        <DatePicker style={{ width: '100%' }} />
+                                    </Form.Item>
+                                </Col>
+                                <Col xs={24} md={12}>
+                                    <Form.Item label="Gio" name="time" rules={[{ required: true }]}>
+                                        <TimePicker style={{ width: '100%' }} format="HH:mm" />
+                                    </Form.Item>
+                                </Col>
+                                <Col xs={24} md={12}>
+                                    <Form.Item label="So nguoi" name="people" rules={[{ required: true }]}>
+                                        <InputNumber min={1} max={20} style={{ width: '100%' }} />
+                                    </Form.Item>
+                                </Col>
+                                <Col xs={24}>
+                                    <Form.Item label="Ghi chu" name="note">
+                                        <Input.TextArea rows={3} placeholder="Yeu cau them..." />
+                                    </Form.Item>
                                 </Col>
                             </Row>
-                            <Row>
-                                {books.map((book) => (
-                                    <Col key={book.id} xs={24} sm={12} md={8} lg={6} xl={4.8}>
-                                        <div style={{
-                                            border: "1px solid #e8e8e8",
-                                            borderRadius: 8,
-                                            padding: 16,
-                                            background: "#fff",
-                                            boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
-                                            height: "100%",
-                                            display: "flex",
-                                            flexDirection: "column",
-                                            alignItems: "center",
-                                            cursor: "pointer",
-                                            transition: "transform 0.2s, box-shadow 0.2s",
-                                        }}
-                                            onMouseEnter={(e) => {
-                                                e.currentTarget.style.transform = "translateY(-2px)";
-                                                e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.15)";
-                                            }}
-                                            onMouseLeave={(e) => {
-                                                e.currentTarget.style.transform = "translateY(0)";
-                                                e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.05)";
-                                            }}
-                                            onClick={() => {
-                                                navigate(`/dish/${book.id}`);
-                                            }}
-                                        >
-                                            <img
-                                                src={resolveStorageUrl(book.image, 'dish')}
-                                                alt={book.name}
-                                                style={{
-                                                    width: 120,
-                                                    height: 160,
-                                                    objectFit: "cover",
-                                                    marginBottom: 16,
-                                                    borderRadius: 4,
-                                                    border: "1px solid #f0f0f0"
-                                                }}
-                                            />
-                                            <div style={{
-                                                fontWeight: 500,
-                                                fontSize: 14,
-                                                marginBottom: 8,
-                                                textAlign: "center",
-                                                lineHeight: "1.4",
-                                                height: "2.8em",
-                                                overflow: "hidden",
-                                                display: "-webkit-box",
-                                                WebkitLineClamp: 2,
-                                                WebkitBoxOrient: "vertical",
-                                                color: "#333"
-                                            }}>
-                                                {book.name}
-                                            </div>
-                                            <div style={{
-                                                fontWeight: 600,
-                                                fontSize: 16,
-                                                color: "#ff424e",
-                                                marginBottom: 8
-                                            }}>
-                                                {new Intl.NumberFormat('vi-VN').format(book.price)} ₫
-                                            </div>
-                                            <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 4 }}>
-                                                <Rate
-                                                    allowHalf
-                                                    disabled
-                                                    value={5}
-                                                    style={{ color: "#ffce3d", fontSize: 12 }}
-                                                />
-                                            </div>
-                                            <div style={{ fontSize: 12, color: "#888" }}>
-                                                {book.category?.name}
-                                            </div>
-                                        </div>
-                                    </Col>
-                                ))}
-                            </Row>
-                            <Divider />
-                            <Row style={{ display: "flex", justifyContent: "center" }}>
-                                <Pagination
-                                    defaultCurrent={meta.current}
-                                    total={meta.total}
-                                    pageSize={meta.pageSize}
-                                    responsive
-                                    onChange={(page, pageSize) => {
-                                        handleOnChangePage({ current: page, pageSize });
-                                    }}
-                                />
-                            </Row>
-                        </Spin>
-
-                    </Col>
-
-                </Row>
-            </div>
-            <MobileFilter
-                isOpen={isShowMobileFilter}
-                setIsOpen={setIsShowMobileFilter}
-                categories={categories}
-                onFinish={onFinish}
-            />
-        </>
+                            <Button type="primary" htmlType="submit" size="large" block>
+                                Xac nhan dat ban
+                            </Button>
+                        </Form>
+                    </Card>
+                </div>
+            </section>
+        </div>
     );
-}
+};
+
 export default HomePage;
