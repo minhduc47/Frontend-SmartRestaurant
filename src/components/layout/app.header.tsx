@@ -148,11 +148,7 @@ const AppHeader = () => {
             <div className={`header-container ${isScrolled ? 'is-scrolled' : ''}`}>
                 <header className="page-header">
                     <div className="header-left" onClick={() => navigate('/')}>
-                        <div className="brand-mark">R</div>
-                        <div className="brand-text">
-                            <strong>Restaurant</strong>
-                            <span>Fine Dining</span>
-                        </div>
+                        <img src="/webtop/logo.png" alt="Restaurant" className="brand-logo" />
                     </div>
 
                     <nav className="desktop-nav">

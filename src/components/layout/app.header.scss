@@ -15,7 +15,7 @@
     }
 
     .page-header {
-        max-width: 1200px;
+        max-width: 1280px;
         margin: 0 auto;
         padding: 0 20px;
         display: flex;
@@ -27,38 +27,12 @@
     .header-left {
         display: flex;
         align-items: center;
-        gap: 10px;
         cursor: pointer;
 
-        .brand-mark {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            background: #ff6426;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-        }
-
-        .brand-text {
-            display: flex;
-            flex-direction: column;
-            line-height: 1.1;
-
-            strong {
-                font-size: 15px;
-                color: #101828;
-                letter-spacing: 0.02em;
-            }
-
-            span {
-                font-size: 11px;
-                text-transform: uppercase;
-                letter-spacing: 0.16em;
-                color: #6a7282;
-            }
+        .brand-logo {
+            width: 120px;
+            height: 50px;
+            object-fit: contain;
         }
     }
 

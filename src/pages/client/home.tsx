@@ -10,6 +10,7 @@ import {
     InputNumber,
     message,
     Row,
+    Rate,
     Space,
     TimePicker,
 } from 'antd';
@@ -27,21 +28,21 @@ interface ICategoryOption {
 const testimonials = [
     {
         name: 'Mosan Cameron',
-        role: 'Giam doc dieu hanh',
+        role: 'Giám đốc điều hành Fedex',
         feedback:
-            'Khong gian nha hang tuyet voi, mon an vuot xa mong doi va dich vu rat chu dao. Toi chac chan se quay lai.',
+            'Không gian nhà hàng thật tuyệt vời và món ăn vượt xa mong đợi. Dịch vụ chu đáo, tôi chắc chắn sẽ quay lại.',
     },
     {
         name: 'Sarah Johnson',
-        role: 'Marketing Manager',
+        role: 'Trưởng phòng Marketing',
         feedback:
-            'Trai nghiem am thuc dang nho, mon an duoc trinh bay dep mat va huong vi rat can bang. Rat dang thu.',
+            'Một trải nghiệm ẩm thực đáng nhớ, món ăn được trình bày đẹp mắt và hương vị rất độc đáo.',
     },
     {
         name: 'John Carter',
-        role: 'Creative Director',
+        role: 'Giám đốc Sáng tạo',
         feedback:
-            'Buoi toi tuyet voi voi khong khi am cung, nhan vien than thien va menu trang mieng rat an tuong.',
+            'Bữa tối tuyệt vời với không khí ấm cúng, nhân viên thân thiện và món tráng miệng ấn tượng.',
     },
 ];
 
@@ -50,19 +51,40 @@ const blogs = [
         id: 1,
         image: '/webtop/blog_1.png',
         title: 'Nghe thuat ket hop ruou vang va mon Au',
-        desc: 'Cach lua chon ruou vang phu hop voi tung nhom huong vi de nang tam bua toi.',
+        desc: 'Cách lựa chọn rượu vang phù hợp với từng nhóm hương vị để nâng tầm trải nghiệm bữa tối.',
     },
     {
         id: 2,
         image: '/webtop/blog_2.png',
         title: '5 nguyen lieu theo mua lam nen menu dac biet',
-        desc: 'Tu nong trai den ban an, hanh trinh cua nguyen lieu tuoi va sach trong tung mon.',
+        desc: 'Từ nông trại đến bàn ăn, hành trình của nguyên liệu tươi sạch trong từng món đặc sắc.',
     },
     {
         id: 3,
         image: '/webtop/blog_3.png',
         title: 'Bi quyet tao nen mon khai vi day an tuong',
-        desc: 'Can bang ket cau, nhiet do va gia vi de mo dau bua an mot cach tinh te.',
+        desc: 'Cân bằng kết cấu, nhiệt độ và gia vị để mở đầu bữa ăn một cách tinh tế.',
+    },
+];
+
+const signatureDishes = [
+    {
+        id: 1,
+        image: '/webtop/food_item_1.png',
+        name: 'Bun bo wagyu',
+        desc: 'Hương vị đậm đà với nước dùng hầm chậm và thịt wagyu mềm mọng.',
+    },
+    {
+        id: 2,
+        image: '/webtop/food_item_2.png',
+        name: 'Ca hoi ap chao',
+        desc: 'Cá hồi tươi kết hợp sốt bơ chanh và rau theo mùa hài hòa.',
+    },
+    {
+        id: 3,
+        image: '/webtop/food_item_3.png',
+        name: 'Bo sot ruou do',
+        desc: 'Thịt bò mềm thơm, hoàn hảo cho bữa tối trang trọng.',
     },
 ];
 
@@ -106,20 +128,20 @@ const HomePage = () => {
                 <div className="hero-content reveal-up">
                     <p className="hero-kicker">Fine Dining Experience</p>
                     <h1>
-                        Huong vi tinh te,
+                        Hương vị tinh tế,
                         <br />
-                        khong gian dang cap
+                        không gian đẳng cấp
                     </h1>
                     <p>
-                        Mang den trai nghiem am thuc dinh cao voi nguyen lieu tuoi ngon, phong cach phuc vu chu dao
-                        va khong gian am cung hien dai.
+                        Mang đến trải nghiệm ẩm thực đỉnh cao với nguyên liệu tươi ngon, phong cách phục vụ chu đáo
+                        và không gian ấm cúng hiện đại.
                     </p>
                     <Space size={16} wrap>
-                        <Button type="primary" size="large" onClick={() => navigate('/#booking')}>
-                            Dat ban ngay
+                        <Button className="hero-primary-btn" type="primary" size="large" onClick={() => navigate('/#booking')}>
+                            Đặt bàn ngay
                         </Button>
-                        <Button size="large" ghost onClick={() => navigate('/about')}>
-                            Kham pha them <ArrowRightOutlined />
+                        <Button className="hero-secondary-btn" size="large" ghost onClick={() => navigate('/about')}>
+                            Khám phá thêm <ArrowRightOutlined />
                         </Button>
                     </Space>
                 </div>
@@ -129,15 +151,15 @@ const HomePage = () => {
                 <div className="section-inner">
                     <div className="section-heading">
                         <p>About Us</p>
-                        <h2>Chung toi ton vinh am thuc bang su sang tao va tam huyet</h2>
+                            <h2>Chúng tôi tôn vinh ẩm thực bằng sự sáng tạo và tâm huyết</h2>
                     </div>
                     <Row gutter={[24, 24]}>
                         <Col xs={24} md={12} className="reveal-up delay-1">
                             <Card bordered={false} className="soft-card">
                                 <h3>Nguyen lieu chon loc</h3>
                                 <p>
-                                    Moi mon an duoc tao nen tu nguyen lieu theo mua, uu tien chat luong va do tuoi moi moi
-                                    ngay.
+                                    Mỗi món ăn được tạo nên từ nguyên liệu theo mùa, ưu tiên chất lượng và độ tươi mới mỗi
+                                    ngày.
                                 </p>
                             </Card>
                         </Col>
@@ -148,11 +170,36 @@ const HomePage = () => {
                             <Card bordered={false} className="soft-card about-secondary-card">
                                 <h3>Phong cach hien dai</h3>
                                 <p>
-                                    Ket hop ky thuat am thuc quoc te va huong vi dia phuong de tao nen trai nghiem can bang va
-                                    dang nho.
+                                    Kết hợp kỹ thuật ẩm thực quốc tế và hương vị địa phương để tạo nên trải nghiệm cân bằng và
+                                    đáng nhớ.
                                 </p>
                             </Card>
                         </Col>
+                    </Row>
+                </div>
+            </section>
+
+            <section className="signature-section">
+                <div className="section-inner">
+                    <div className="section-heading align-between">
+                        <div>
+                            <p>Chef Selection</p>
+                            <h2>Món đặc trưng theo mùa</h2>
+                        </div>
+                    </div>
+                    <Row gutter={[20, 20]}>
+                        {signatureDishes.map((dish) => (
+                            <Col xs={24} md={8} key={dish.id} className="reveal-up">
+                                <Card className="signature-card" bordered={false}>
+                                    <div className="signature-image-wrap">
+                                        <img src={dish.image} alt={dish.name} />
+                                    </div>
+                                    <h3>{dish.name}</h3>
+                                    <p>{dish.desc}</p>
+                                    <Button type="text">Thưởng thức ngay</Button>
+                                </Card>
+                            </Col>
+                        ))}
                     </Row>
                 </div>
             </section>
@@ -162,7 +209,7 @@ const HomePage = () => {
                     <div className="section-heading align-between">
                         <div>
                             <p>Featured Menu</p>
-                            <h2>Mon an noi bat</h2>
+                            <h2>Món ăn nổi bật</h2>
                         </div>
                     </div>
 
@@ -200,7 +247,7 @@ const HomePage = () => {
                 <div className="section-inner">
                     <div className="section-heading">
                         <p>Our Team</p>
-                        <h2>Nhung dau bep tao nen dau an</h2>
+                            <h2>Những đầu bếp tạo nên dấu ấn</h2>
                     </div>
                     <Row gutter={[20, 20]}>
                         {chefCards.map((chef) => (
@@ -222,12 +269,14 @@ const HomePage = () => {
                 <div className="section-inner">
                     <div className="section-heading">
                         <p>Testimonials</p>
-                        <h2>Khach hang noi gi ve chung toi</h2>
+                            <h2>Khách hàng nói gì về chúng tôi</h2>
                     </div>
                     <Carousel autoplay dots>
                         {testimonials.map((item) => (
                             <div key={item.name}>
                                 <div className="testimonial-card">
+                                    <img src="/webtop/client_1.png" alt="client" className="testimonial-avatar" />
+                                    <Rate value={5} disabled className="testimonial-rate" />
                                     <blockquote>"{item.feedback}"</blockquote>
                                     <h4>{item.name}</h4>
                                     <span>{item.role}</span>
@@ -243,7 +292,7 @@ const HomePage = () => {
                     <div className="section-heading align-between">
                         <div>
                             <p>Latest News</p>
-                            <h2>Bai viet am thuc</h2>
+                            <h2>Bài viết ẩm thực</h2>
                         </div>
                     </div>
 
@@ -256,7 +305,9 @@ const HomePage = () => {
                                     </div>
                                     <h3>{blog.title}</h3>
                                     <p>{blog.desc}</p>
-                                    <button>Xem them</button>
+                                    <button>
+                                        Xem thêm <ArrowRightOutlined />
+                                    </button>
                                 </Card>
                             </Col>
                         ))}
@@ -269,9 +320,9 @@ const HomePage = () => {
                 <div className="section-inner booking-inner">
                     <div className="booking-copy">
                         <p>Reservation</p>
-                        <h2>Dat ban cho toi nay</h2>
+                        <h2>Đặt bàn cho tối nay</h2>
                         <span>
-                            Dat cho som de giu cho ngoi dep nhat. Doi ngu cua chung toi se xac nhan nhanh sau khi tiep nhan.
+                            Đặt chỗ sớm để giữ vị trí đẹp nhất. Đội ngũ của chúng tôi sẽ xác nhận nhanh sau khi tiếp nhận.
                         </span>
                     </div>
                     <Card className="booking-form-card" bordered={false}>
@@ -283,38 +334,38 @@ const HomePage = () => {
                         >
                             <Row gutter={[12, 12]}>
                                 <Col xs={24} md={12}>
-                                    <Form.Item label="Ho va ten" name="name" rules={[{ required: true }]}>
-                                        <Input placeholder="Nguyen Van A" />
+                                    <Form.Item label="Họ và tên" name="name" rules={[{ required: true }]}>
+                                        <Input placeholder="Nguyễn Văn A" />
                                     </Form.Item>
                                 </Col>
                                 <Col xs={24} md={12}>
-                                    <Form.Item label="So dien thoai" name="phone" rules={[{ required: true }]}>
+                                    <Form.Item label="Số điện thoại" name="phone" rules={[{ required: true }]}>
                                         <Input placeholder="09xx xxx xxx" />
                                     </Form.Item>
                                 </Col>
                                 <Col xs={24} md={12}>
-                                    <Form.Item label="Ngay" name="date" rules={[{ required: true }]}>
+                                    <Form.Item label="Ngày" name="date" rules={[{ required: true }]}>
                                         <DatePicker style={{ width: '100%' }} />
                                     </Form.Item>
                                 </Col>
                                 <Col xs={24} md={12}>
-                                    <Form.Item label="Gio" name="time" rules={[{ required: true }]}>
+                                    <Form.Item label="Giờ" name="time" rules={[{ required: true }]}>
                                         <TimePicker style={{ width: '100%' }} format="HH:mm" />
                                     </Form.Item>
                                 </Col>
                                 <Col xs={24} md={12}>
-                                    <Form.Item label="So nguoi" name="people" rules={[{ required: true }]}>
+                                    <Form.Item label="Số người" name="people" rules={[{ required: true }]}>
                                         <InputNumber min={1} max={20} style={{ width: '100%' }} />
                                     </Form.Item>
                                 </Col>
                                 <Col xs={24}>
-                                    <Form.Item label="Ghi chu" name="note">
-                                        <Input.TextArea rows={3} placeholder="Yeu cau them..." />
+                                    <Form.Item label="Ghi chú" name="note">
+                                        <Input.TextArea rows={3} placeholder="Yêu cầu thêm..." />
                                     </Form.Item>
                                 </Col>
                             </Row>
                             <Button type="primary" htmlType="submit" size="large" block>
-                                Xac nhan dat ban
+                                Xác nhận đặt bàn
                             </Button>
                         </Form>
                     </Card>

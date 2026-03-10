@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 import { FiFacebook, FiInstagram, FiMail, FiMapPin, FiPhoneCall } from 'react-icons/fi';
 
 const footerLinks = [
-    { label: 'Ve chung toi', to: '/about' },
-    { label: 'Thuc don', to: '/#menu' },
-    { label: 'Dat ban', to: '/#booking' },
-    { label: 'Bai viet', to: '/#blog' },
+    { label: 'Về chúng tôi', to: '/about' },
+    { label: 'Thực đơn', to: '/#menu' },
+    { label: 'Đặt bàn', to: '/#booking' },
+    { label: 'Bài viết', to: '/#blog' },
 ];
 
 const AppFooter = () => {
@@ -14,15 +14,15 @@ const AppFooter = () => {
         <footer id="contact" className="site-footer">
             <div className="footer-inner">
                 <div className="footer-col">
-                    <h4>Ve Chung Toi</h4>
+                    <h4>Về Chúng Tôi</h4>
                     <p>
-                        Chung toi tu hao mang den trai nghiem am thuc tinh te, ket hop nguyen lieu tuoi ngon dia
-                        phuong voi phong cach che bien hien dai.
+                        Chúng tôi tự hào mang đến trải nghiệm ẩm thực tinh tế, kết hợp nguyên liệu tươi ngon địa
+                        phương với phong cách chế biến hiện đại.
                     </p>
                 </div>
 
                 <div className="footer-col">
-                    <h4>Lien Ket Nhanh</h4>
+                    <h4>Liên Kết Quan Trọng</h4>
                     <div className="footer-links">
                         {footerLinks.map((item) => (
                             <Link key={item.label} to={item.to}>
@@ -33,9 +33,9 @@ const AppFooter = () => {
                 </div>
 
                 <div className="footer-col">
-                    <h4>Thong Tin</h4>
+                    <h4>Thông Tin</h4>
                     <p>
-                        <FiMapPin /> 106 Thanh Thuy, Hai Chau, Da Nang
+                        <FiMapPin /> 106 Thanh Thủy, Hải Châu, Đà Nẵng
                     </p>
                     <p>
                         <FiPhoneCall /> +84 793 656 222
@@ -54,17 +54,17 @@ const AppFooter = () => {
                 </div>
 
                 <div className="footer-col">
-                    <h4>Ban Tin</h4>
-                    <p>Nhan uu dai va cap nhat mon moi hang tuan.</p>
+                    <h4>Bản Tin</h4>
+                    <p>Nhận ưu đãi và cập nhật món mới hằng tuần.</p>
                     <Form layout="inline" onFinish={() => undefined}>
                         <Form.Item name="email" style={{ width: '100%' }}>
-                            <Input placeholder="Nhap email cua ban" />
+                            <Input placeholder="Nhập email của bạn" />
                         </Form.Item>
-                        <Button type="primary">Dang ky</Button>
+                        <Button type="primary">Đăng ký</Button>
                     </Form>
                 </div>
             </div>
-            <div className="footer-bottom">Ban quyen © 2026 Restaurant. All rights reserved.</div>
+            <div className="footer-bottom">Bản quyền © 2026 Restaurant. All rights reserved.</div>
         </footer>
     );
 };
