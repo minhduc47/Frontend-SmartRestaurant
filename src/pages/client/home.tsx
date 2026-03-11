@@ -124,26 +124,43 @@ const HomePage = () => {
     return (
         <div className="restaurant-home">
             <section className="hero-section">
-                <div className="hero-overlay" />
-                <div className="hero-content reveal-up">
-                    <p className="hero-kicker">Fine Dining Experience</p>
-                    <h1>
-                        Hương vị tinh tế,
-                        <br />
-                        không gian đẳng cấp
-                    </h1>
-                    <p>
-                        Mang đến trải nghiệm ẩm thực đỉnh cao với nguyên liệu tươi ngon, phong cách phục vụ chu đáo
-                        và không gian ấm cúng hiện đại.
-                    </p>
-                    <Space size={16} wrap>
-                        <Button className="hero-primary-btn" type="primary" size="large" onClick={() => navigate('/#booking')}>
-                            Đặt bàn ngay
-                        </Button>
-                        <Button className="hero-secondary-btn" size="large" ghost onClick={() => navigate('/about')}>
-                            Khám phá thêm <ArrowRightOutlined />
-                        </Button>
-                    </Space>
+                <div className="hero-inner">
+                    <div className="hero-copy">
+                        <p className="hero-kicker">HƯƠNG VỊ THƯỢNG HẠNG</p>
+                        <h1>
+                            Tinh hoa ẩm thực
+                            <br />
+                            <span>tan ngay</span> trong
+                            <br />
+                            miệng
+                        </h1>
+                        <p>
+                            Mang đến trải nghiệm ẩm thực đỉnh cao, mỗi món ăn là một tác phẩm nghệ thuật được chế biến
+                            tỉ mỉ từ nguyên liệu tươi ngon nhất.
+                        </p>
+                        <Space size={20} wrap>
+                            <Button className="hero-primary-btn" type="primary" size="large" onClick={() => navigate('/#booking')}>
+                                ĐẶT BÀN NGAY
+                            </Button>
+                            <button className="hero-video-btn" type="button">
+                                <span className="hero-video-icon">▶</span>
+                                <span>
+                                    <strong>XEM VIDEO</strong>
+                                    <small>Câu chuyện của chúng tôi</small>
+                                </span>
+                            </button>
+                        </Space>
+                    </div>
+
+                    <div className="hero-right-visual">
+                        <div className="hero-gradient-bg" />
+                        <img className="hero-food-main" src="/webtop/banner_bg.png" alt="dish" />
+                        <img className="hero-decor hero-decor-overlay" src="/webtop/banner_overlay.png" alt="decor" />
+                        <img className="hero-decor hero-decor-leaf" src="/webtop/about.png" alt="leaf" />
+                        <img className="hero-decor hero-decor-spice-1" src="/webtop/food_item_1.png" alt="spice" />
+                        <img className="hero-decor hero-decor-spice-2" src="/webtop/food_item_3.png" alt="spice" />
+                        <div className="hero-food-shadow" />
+                    </div>
                 </div>
             </section>
 
@@ -151,7 +168,7 @@ const HomePage = () => {
                 <div className="section-inner">
                     <div className="section-heading">
                         <p>About Us</p>
-                            <h2>Chúng tôi tôn vinh ẩm thực bằng sự sáng tạo và tâm huyết</h2>
+                        <h2>Chúng tôi tôn vinh ẩm thực bằng sự sáng tạo và tâm huyết</h2>
                     </div>
                     <Row gutter={[24, 24]}>
                         <Col xs={24} md={12} className="reveal-up delay-1">
@@ -247,7 +264,7 @@ const HomePage = () => {
                 <div className="section-inner">
                     <div className="section-heading">
                         <p>Our Team</p>
-                            <h2>Những đầu bếp tạo nên dấu ấn</h2>
+                        <h2>Những đầu bếp tạo nên dấu ấn</h2>
                     </div>
                     <Row gutter={[20, 20]}>
                         {chefCards.map((chef) => (
@@ -269,7 +286,7 @@ const HomePage = () => {
                 <div className="section-inner">
                     <div className="section-heading">
                         <p>Testimonials</p>
-                            <h2>Khách hàng nói gì về chúng tôi</h2>
+                        <h2>Khách hàng nói gì về chúng tôi</h2>
                     </div>
                     <Carousel autoplay dots>
                         {testimonials.map((item) => (
