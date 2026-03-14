@@ -71,20 +71,23 @@ const signatureDishes = [
     {
         id: 1,
         image: '/webtop/food_item_1.png',
-        name: 'Bun bo wagyu',
-        desc: 'Hương vị đậm đà với nước dùng hầm chậm và thịt wagyu mềm mọng.',
+        name: 'Burger Ấn Độ',
+        desc: 'Sự kết hợp độc đáo giữa bánh burger truyền thống và hương vị đậm đà của gia vị Ấn Độ.',
+        price: '$25.00',
     },
     {
         id: 2,
         image: '/webtop/food_item_2.png',
-        name: 'Ca hoi ap chao',
-        desc: 'Cá hồi tươi kết hợp sốt bơ chanh và rau theo mùa hài hòa.',
+        name: 'Pizza Ý',
+        desc: 'Đế bánh giòn rụm, phô mai béo ngậy và các loại topping tươi ngon chuẩn vị Ý.',
+        price: '$25.00',
     },
     {
         id: 3,
         image: '/webtop/food_item_3.png',
-        name: 'Bo sot ruou do',
-        desc: 'Thịt bò mềm thơm, hoàn hảo cho bữa tối trang trọng.',
+        name: 'Mỳ Ý Sốt Kem',
+        desc: 'Sợi mỳ dai mềm hòa quyện trong nước sốt kem béo ngậy, mang đến trải nghiệm ẩm thực tinh tế.',
+        price: '$25.00',
     },
 ];
 
@@ -140,7 +143,7 @@ const HomePage = () => {
                         </p>
                         <Space size={20} wrap>
                             <Button className="hero-primary-btn" type="primary" size="large" onClick={() => navigate('/#booking')}>
-                                ĐẶT BÀN NGAY
+                                Đặt hàng ngay
                             </Button>
                             <button className="hero-video-btn" type="button">
                                 <span className="hero-video-icon">▶</span>
@@ -154,12 +157,13 @@ const HomePage = () => {
 
                     <div className="hero-right-visual">
                         <div className="hero-gradient-bg" />
-                        <img className="hero-food-main" src="/webtop/banner_bg.png" alt="dish" />
-                        <img className="hero-decor hero-decor-overlay" src="/webtop/banner_overlay.png" alt="decor" />
-                        <img className="hero-decor hero-decor-leaf" src="/webtop/about.png" alt="leaf" />
-                        <img className="hero-decor hero-decor-spice-1" src="/webtop/food_item_1.png" alt="spice" />
-                        <img className="hero-decor hero-decor-spice-2" src="/webtop/food_item_3.png" alt="spice" />
-                        <div className="hero-food-shadow" />
+                        <div className="hero-glow" />
+                        <img className="hero-food-main" src="/webtop/banner_bg.png" alt="hero food" />
+                        <img className="hero-overlay-top" src="/webtop/banner_overlay.png" alt="decor" />
+                        <div className="hero-quality-badge">
+                            <strong>100%</strong>
+                            <span>NGUYÊN LIỆU SẠCH</span>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -167,16 +171,15 @@ const HomePage = () => {
             <section className="about-section">
                 <div className="section-inner">
                     <div className="section-heading">
-                        <p>About Us</p>
-                        <h2>Chúng tôi tôn vinh ẩm thực bằng sự sáng tạo và tâm huyết</h2>
+                        <p>CÂU CHUYỆN THƯƠNG HIỆU</p>
+                        <h2>Món ngon gắn liền với giá trị khởi nguồn</h2>
                     </div>
                     <Row gutter={[24, 24]}>
                         <Col xs={24} md={12} className="reveal-up delay-1">
                             <Card bordered={false} className="soft-card">
-                                <h3>Nguyen lieu chon loc</h3>
+                                <h3>Nguyên liệu sạch</h3>
                                 <p>
-                                    Mỗi món ăn được tạo nên từ nguyên liệu theo mùa, ưu tiên chất lượng và độ tươi mới mỗi
-                                    ngày.
+                                    Tuyển chọn trực tiếp từ các trang trại hữu cơ mỗi sáng, đảm bảo độ tươi và chất lượng.
                                 </p>
                             </Card>
                         </Col>
@@ -185,10 +188,9 @@ const HomePage = () => {
                                 <img src="/webtop/about.png" alt="about" />
                             </div>
                             <Card bordered={false} className="soft-card about-secondary-card">
-                                <h3>Phong cach hien dai</h3>
+                                <h3>Đầu bếp 5 sao</h3>
                                 <p>
-                                    Kết hợp kỹ thuật ẩm thực quốc tế và hương vị địa phương để tạo nên trải nghiệm cân bằng và
-                                    đáng nhớ.
+                                    Đội ngũ nghệ nhân tài hoa với tư duy ẩm thực hiện đại, tạo nên dấu ấn trong từng món ăn.
                                 </p>
                             </Card>
                         </Col>
@@ -198,22 +200,28 @@ const HomePage = () => {
 
             <section className="signature-section">
                 <div className="section-inner">
-                    <div className="section-heading align-between">
-                        <div>
-                            <p>Chef Selection</p>
-                            <h2>Món đặc trưng theo mùa</h2>
-                        </div>
+                    <div className="section-heading signature-heading">
+                        <p>THỰC ĐƠN PHỔ BIẾN</p>
+                        <h2>
+                            Món đặc sắc <span>yêu thích</span>
+                        </h2>
                     </div>
-                    <Row gutter={[20, 20]}>
+                    <Row gutter={[28, 28]}>
                         {signatureDishes.map((dish) => (
                             <Col xs={24} md={8} key={dish.id} className="reveal-up">
                                 <Card className="signature-card" bordered={false}>
                                     <div className="signature-image-wrap">
                                         <img src={dish.image} alt={dish.name} />
+                                        <span className="signature-price">{dish.price}</span>
+                                    </div>
+                                    <div className="signature-stars" aria-hidden>
+                                        ★ ★ ★ ★ ★
                                     </div>
                                     <h3>{dish.name}</h3>
-                                    <p>{dish.desc}</p>
-                                    <Button type="text">Thưởng thức ngay</Button>
+                                    <p>“{dish.desc}”</p>
+                                    <Button type="text" className="signature-cta-btn">
+                                        KHÁM PHÁ MÓN ĂN <ArrowRightOutlined />
+                                    </Button>
                                 </Card>
                             </Col>
                         ))}
@@ -225,8 +233,8 @@ const HomePage = () => {
                 <div className="section-inner">
                     <div className="section-heading align-between">
                         <div>
-                            <p>Featured Menu</p>
-                            <h2>Món ăn nổi bật</h2>
+                            <p>LỰA CHỌN HOÀN HẢO</p>
+                            <h2>Thực đơn tinh hoa</h2>
                         </div>
                     </div>
 
@@ -263,8 +271,8 @@ const HomePage = () => {
             <section id="chefs" className="chef-section">
                 <div className="section-inner">
                     <div className="section-heading">
-                        <p>Our Team</p>
-                        <h2>Những đầu bếp tạo nên dấu ấn</h2>
+                        <p>NGHỆ NHÂN ĐỨNG BẾP</p>
+                        <h2>Đội ngũ đầu bếp tài hoa</h2>
                     </div>
                     <Row gutter={[20, 20]}>
                         {chefCards.map((chef) => (
@@ -274,7 +282,7 @@ const HomePage = () => {
                                         <img src={chef.image} alt={chef.name} />
                                     </div>
                                     <h3>{chef.name}</h3>
-                                    <p>{chef.role}</p>
+                                    <p>BẾP TRƯỞNG</p>
                                 </Card>
                             </Col>
                         ))}
@@ -285,8 +293,8 @@ const HomePage = () => {
             <section className="testimonial-section">
                 <div className="section-inner">
                     <div className="section-heading">
-                        <p>Testimonials</p>
-                        <h2>Khách hàng nói gì về chúng tôi</h2>
+                        <p>CHIA SẺ TỪ THỰC KHÁCH</p>
+                        <h2>Lời tri ân từ trái tim</h2>
                     </div>
                     <Carousel autoplay dots>
                         {testimonials.map((item) => (
@@ -308,8 +316,8 @@ const HomePage = () => {
                 <div className="section-inner">
                     <div className="section-heading align-between">
                         <div>
-                            <p>Latest News</p>
-                            <h2>Bài viết ẩm thực</h2>
+                            <p>TIN MỚI NHẤT</p>
+                            <h2>Bài viết nổi bật & câu chuyện ẩm thực</h2>
                         </div>
                     </div>
 
@@ -337,9 +345,9 @@ const HomePage = () => {
                 <div className="section-inner booking-inner">
                     <div className="booking-copy">
                         <p>Reservation</p>
-                        <h2>Đặt bàn cho tối nay</h2>
+                        <h2>Đặt Bàn Ngay</h2>
                         <span>
-                            Đặt chỗ sớm để giữ vị trí đẹp nhất. Đội ngũ của chúng tôi sẽ xác nhận nhanh sau khi tiếp nhận.
+                            Đặt chỗ sớm để giữ vị trí đẹp nhất. Chúng tôi xác nhận nhanh để bạn có trải nghiệm trọn vẹn.
                         </span>
                     </div>
                     <Card className="booking-form-card" bordered={false}>
